@@ -16,7 +16,7 @@ namespace Circustrein
             Contents = new List<Animal>();
         }
 
-        public bool TryToAddAnimal(Animal animal, Wagon wagon)
+        public bool TryToAddAnimal(Animal animal)
         {
             int animalSize = (int)animal.AnimalSize;
             int wagonContents = 0;
@@ -26,17 +26,28 @@ namespace Circustrein
                 wagonContents += (int)animalInWagon.AnimalSize;
             }
 
-            if (wagonContents >= capacity || 
-                wagonContents + animalSize > capacity || 
-                animal.WillEatEachother(animal, wagon)) 
+            if (wagonContents >= capacity ||
+                wagonContents + animalSize > capacity ||
+                WillAnimalsEatEachOther(animal))
             { 
                 return false;
             }
             else
             {
-                wagon.AddAnimal(animal);
+                this.AddAnimal(animal);
                 return true;
             }
+        }
+        public bool WillAnimalsEatEachOther(Animal newAnimal)
+        {
+            foreach (Animal wagonAnimal in Contents)
+            {
+                if (newAnimal.WillEatEachother(wagonAnimal))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void AddAnimal(Animal animal)
