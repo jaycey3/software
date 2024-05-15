@@ -142,5 +142,25 @@ namespace Recipes.DAL.Repository
             } 
         }
 
+        public void DeleteRecipe(int id)
+        {
+            try
+            {
+                using SqlConnection connection = new(_connectionString);
+                string query = "DELETE FROM recipes WHERE id = @Id";
+
+                using SqlCommand command = new(query, connection);
+                connection.Open();
+
+                command.Parameters.AddWithValue("@Id", id);
+
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("There was an error while trying to delete the recipe: " + ex);
+            }
+        }
+
     }
 }

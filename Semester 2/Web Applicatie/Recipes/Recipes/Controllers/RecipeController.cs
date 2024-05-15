@@ -128,23 +128,49 @@ namespace Recipes.Controllers
             return View(recipeViewModel);
         }
 
+        [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View();
+            var recipe = RecipeService.GetRecipeById(id, _recipeService.Get_recipeRepository());
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            var recipeViewModel = new RecipeViewModel
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                Time = recipe.Time,
+                Type = recipe.Type,
+                Img = recipe.Img,
+                UserId = recipe.UserId
+            };
+
+            return View(recipeViewModel); ;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(RecipeViewModel viewModel)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _recipeService.DeleteRecipe(viewModel.Id);
+                    TempData["SuccessMessage"] = "Recipe deleted successfully.";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("There was an error while trying to delete recipe: " + ex);
+                    TempData["ErrorMessage"] = "An error occurred while deleting the recipe. Please try again.";
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(viewModel);
         }
     }
 }

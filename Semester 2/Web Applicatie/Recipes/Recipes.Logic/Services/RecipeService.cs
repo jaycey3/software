@@ -108,5 +108,12 @@ namespace Recipes.Logic.Services
                 return null;
             }
         }
+
+        public string? DeleteRecipe(int id)
+        {
+            _recipeRepository.DeleteRecipe(id);
+            return null;
+
+        }
     }
 }
