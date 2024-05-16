@@ -9,6 +9,7 @@ namespace Recipes.Models
         public string? Description { get; set; }
         [Display(Name = "Bereidingstijd")]
         public int Time { get; set; }
+        [Display(Name = "Menugang")]
         public string? Type { get; set; }
         [Display(Name = "Afbeelding")]
         public string? Img { get; set; }

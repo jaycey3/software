@@ -1,12 +1,10 @@
-﻿using Recipes.DAL.DTO;
-using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
-using System.Reflection;
-using System.Linq.Expressions;
+﻿using System.Data.SqlClient;
+using Recipes.Logic.Interfaces;
+using Recipes.Logic.Models;
 
 namespace Recipes.DAL.Repository
 {
-    public class RecipeRepository
+    public class RecipeRepository : IRecipeRepository
     {
         private readonly string _connectionString;
 
@@ -15,9 +13,9 @@ namespace Recipes.DAL.Repository
             _connectionString = "Server=mssqlstud.fhict.local;Database=dbi538222;Integrated Security=False;User Id=dbi538222;Password=KCR3ank4eba_her-exb;MultipleActiveResultSets=true";
         }
 
-        public List<RecipeDTO> GetAllRecipes()
+        public List<RecipeModel> GetAllRecipes()
         {
-            List<RecipeDTO> recipes = [];
+            List<RecipeModel> recipes = [];
 
             using (SqlConnection connection = new(_connectionString))
             {
@@ -30,7 +28,7 @@ namespace Recipes.DAL.Repository
                 using SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    RecipeDTO recipe = new()
+                    RecipeModel recipe = new()
                     {
                         Id = Convert.ToInt32(reader["id"]),
                         Title = reader["title"].ToString(),
@@ -46,7 +44,7 @@ namespace Recipes.DAL.Repository
             return recipes;
         }
 
-        public RecipeDTO UpdateRecipe(int id, string? title, string? description, int time, string? type, string? img)
+        public RecipeModel UpdateRecipe(int id, string? title, string? description, int time, string? type, string? img)
         {
             using SqlConnection connection = new(_connectionString);
             string query = "UPDATE recipes SET title = @Title, description = @Description, time = @Time, type = @Type, img = @Img WHERE id = @Id";
@@ -62,8 +60,8 @@ namespace Recipes.DAL.Repository
             command.Parameters.AddWithValue("@Img", img);
 
             command.ExecuteReader();
- 
-            RecipeDTO updatedRecipe = new()
+
+            RecipeModel updatedRecipe = new()
             {
                 Id = id,
                 Title = title,
@@ -76,7 +74,7 @@ namespace Recipes.DAL.Repository
             return updatedRecipe; 
         }
 
-        public RecipeDTO? GetRecipeById(int id)
+        public RecipeModel? GetRecipeById(int id)
         {
             using SqlConnection connection = new(_connectionString);
             string query = "SELECT * FROM recipes WHERE id = @Id";
@@ -89,7 +87,7 @@ namespace Recipes.DAL.Repository
             using SqlDataReader reader = command.ExecuteReader();
             if (reader != null && reader.Read())
             {
-                RecipeDTO recipe = new()
+                RecipeModel  recipe = new()
                 {
                     Id = Convert.ToInt32(reader["id"]),
                     Title = reader["title"].ToString(),
@@ -105,7 +103,7 @@ namespace Recipes.DAL.Repository
             return null;
         }
 
-        public RecipeDTO? CreateRecipe(string title, string description, int time, string type, string img)
+        public RecipeModel? CreateRecipe(string title, string description, int time, string type, string img)
         {
             try
             {
@@ -123,7 +121,7 @@ namespace Recipes.DAL.Repository
 
                 command.ExecuteNonQuery();
 
-                RecipeDTO createdRecipe = new()
+                RecipeModel createdRecipe = new()
                 {
                     Title = title,
                     Description = description,
@@ -134,7 +132,7 @@ namespace Recipes.DAL.Repository
 
                 return createdRecipe;
 
-            }
+            }  
             catch (Exception ex)
             {
                 Console.WriteLine("There was an error while trying to create a new recipe " + ex);

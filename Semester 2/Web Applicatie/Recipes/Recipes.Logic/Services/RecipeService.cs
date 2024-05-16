@@ -1,119 +1,40 @@
-﻿using Recipes.DAL.Repository;
+﻿using Recipes.Logic.Interfaces;
 using Recipes.Logic.Models;
-using Recipes.DAL.DTO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Recipes.Logic.Services
 {
-    public class RecipeService
+    public class RecipeService(IRecipeRepository recipeRepository)
     {
-        private readonly RecipeRepository _recipeRepository;
-
-        public RecipeService()
-        {
-            _recipeRepository = new();
-        }
 
         public List<RecipeModel> GetAllRecipes()
         {
-            var recipeDTOs = _recipeRepository.GetAllRecipes();
-
-            var recipes = new List<RecipeModel>();
-            foreach (var recipeDTO in recipeDTOs)
-            {
-                var recipe = new RecipeModel
-                {
-                    Id = recipeDTO.Id,
-                    Title = recipeDTO.Title,
-                    Description = recipeDTO.Description,
-                    Time = recipeDTO.Time,
-                    Type = recipeDTO.Type,
-                    Img = recipeDTO.Img,
-                    UserId = recipeDTO.UserId,
-                };
-                recipes.Add(recipe);
-            }
+            List<RecipeModel> recipes = recipeRepository.GetAllRecipes();
             return recipes;
         }
 
         public RecipeModel? UpdateRecipe(int id, string title, string description, int time, string type, string img)
         {
-            RecipeDTO recipeDTO = _recipeRepository.UpdateRecipe(id, title, description, time, type, img);
-
-            if (recipeDTO != null)
-            {
-                var recipe = new RecipeModel
-                {
-                    Id = recipeDTO.Id,
-                    Title = recipeDTO.Title,
-                    Description = recipeDTO.Description,
-                    Time = recipeDTO.Time,
-                    Type = recipeDTO.Type,
-                    Img = recipeDTO.Img,
-                };
-
-                return recipe;
-            }
-            else
-            {
-                return null;
-            }
+            RecipeModel recipe = recipeRepository.UpdateRecipe(id, title, description, time, type, img);  
+            return recipe;
         }
 
-        public RecipeRepository Get_recipeRepository()
+        public RecipeModel? GetRecipeById(int id)
         {
-            return _recipeRepository;
-        }
-
-        public static RecipeModel GetRecipeById(int id, RecipeRepository _recipeRepository)
-        {
-            RecipeDTO recipeDTO = _recipeRepository.GetRecipeById(id);
-            var recipe = new RecipeModel
-            {
-                Id = recipeDTO.Id,
-                Title = recipeDTO.Title,
-                Description = recipeDTO.Description,
-                Time = recipeDTO.Time,
-                Type = recipeDTO.Type,
-                Img = recipeDTO.Img,
-                UserId = recipeDTO.UserId
-            };
-
+            RecipeModel? recipe = recipeRepository.GetRecipeById(id);
             return recipe;
         }
 
         public RecipeModel? CreateRecipe(string title, string description, int time, string type, string img)
         {
-            RecipeDTO recipeDTO = _recipeRepository.CreateRecipe(title, description, time, type, img);
-
-            if (recipeDTO != null)
-            {
-                var recipe = new RecipeModel
-                {
-                    Title = recipeDTO.Title,
-                    Description = recipeDTO.Description,
-                    Time = recipeDTO.Time,
-                    Type = recipeDTO.Type,
-                    Img = recipeDTO.Img,
-                };
-
-                return recipe;
-            }
-            else
-            {
-                return null;
-            }
+            RecipeModel? recipe = recipeRepository.CreateRecipe(title, description, time, type, img);
+            return recipe;
         }
 
         public string? DeleteRecipe(int id)
         {
-            _recipeRepository.DeleteRecipe(id);
+            recipeRepository.DeleteRecipe(id);
             return null;
-
         }
     }
 }

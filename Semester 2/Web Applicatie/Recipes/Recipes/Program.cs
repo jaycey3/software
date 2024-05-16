@@ -1,7 +1,15 @@
+using Recipes.DAL.Repository;
+using Recipes.Logic.Interfaces;
+using Recipes.Logic.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register repositories and services
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<RecipeService>();
 
 var app = builder.Build();
 

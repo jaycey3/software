@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Recipes.DAL\Recipes.DAL.csproj" />
-  </ItemGroup>
-
 </Project>

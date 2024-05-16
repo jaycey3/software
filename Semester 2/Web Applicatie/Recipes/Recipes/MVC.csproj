@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Recipes.DAL\Recipes.DAL.csproj" />
     <ProjectReference Include="..\Recipes.Logic\Recipes.Logic.csproj" />
   </ItemGroup>
 
