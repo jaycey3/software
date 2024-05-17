@@ -19,7 +19,6 @@ namespace Recipes.DAL.Repository
 
             using (SqlConnection connection = new(_connectionString))
             {
-                //join query voor username
                 string query = "SELECT * FROM recipes";
 
                 using SqlCommand command = new(query, connection);
