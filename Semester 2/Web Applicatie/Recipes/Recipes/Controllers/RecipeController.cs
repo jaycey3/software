@@ -135,7 +135,8 @@ namespace Recipes.Controllers
                 Time = recipe.Time,
                 Type = recipe.Type,
                 Img = recipe.Img,
-                UserId = recipe.UserId
+                UserId = recipe.UserId,
+                UserName = recipe.UserName
             };
 
             return recipeViewModel;

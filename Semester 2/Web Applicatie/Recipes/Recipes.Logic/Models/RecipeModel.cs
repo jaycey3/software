@@ -15,5 +15,6 @@ namespace Recipes.Logic.Models
         public string? Type { get; set; }
         public string? Img { get; set; }
         public int UserId { get; set; }
+        public string? UserName { get; set; }
     }
 }

@@ -5,7 +5,9 @@ namespace Recipes.Models
     public class RecipeViewModel
     {
         public int Id { get; set; }
+        [Display(Name = "Recept")]
         public string? Title { get; set; }
+        [Display(Name = "Beschrijving")]
         public string? Description { get; set; }
         [Display(Name = "Bereidingstijd")]
         public int Time { get; set; }
@@ -14,5 +16,7 @@ namespace Recipes.Models
         [Display(Name = "Afbeelding")]
         public string? Img { get; set; }
         public int UserId { get; set; }
+        [Display(Name = "Gebruiker")]
+        public string? UserName { get; set; }
     }
 }

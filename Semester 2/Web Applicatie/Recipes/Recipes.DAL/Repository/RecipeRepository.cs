@@ -19,7 +19,9 @@ namespace Recipes.DAL.Repository
 
             using (SqlConnection connection = new(_connectionString))
             {
-                string query = "SELECT * FROM recipes";
+                string query = "SELECT r.id, r.title, r.description, r.time, r.type, r.img, r.user_id, u.first_name " +
+               "FROM recipes r " +
+               "JOIN users u ON r.user_id = u.id";
 
                 using SqlCommand command = new(query, connection);
                 connection.Open();
@@ -35,7 +37,8 @@ namespace Recipes.DAL.Repository
                         Time = Convert.ToInt32(reader["time"]),
                         Type = reader["type"].ToString(),
                         Img = reader["img"].ToString(),
-                        UserId = Convert.ToInt32(reader["user_id"])
+                        UserId = Convert.ToInt32(reader["user_id"]),
+                        UserName = reader["first_name"].ToString()
                     };
                     recipes.Add(recipe);
                 }
@@ -76,7 +79,10 @@ namespace Recipes.DAL.Repository
         public RecipeModel? GetRecipeById(int id)
         {
             using SqlConnection connection = new(_connectionString);
-            string query = "SELECT * FROM recipes WHERE id = @Id";
+            string query = "SELECT r.id, r.title, r.description, r.time, r.type, r.img, r.user_id, u.first_name " +
+               "FROM recipes r " +
+               "JOIN users u ON r.user_id = u.id " +
+               "WHERE r.id = @Id";
 
             using SqlCommand command = new(query, connection);
             connection.Open();
@@ -94,7 +100,8 @@ namespace Recipes.DAL.Repository
                     Time = Convert.ToInt32(reader["time"]),
                     Type = reader["type"].ToString(),
                     Img = reader["img"].ToString(),
-                    UserId = Convert.ToInt32(reader["user_id"])
+                    UserId = Convert.ToInt32(reader["user_id"]),
+                    UserName = reader["first_name"].ToString()
                 };
 
                 return recipe;
@@ -110,7 +117,7 @@ namespace Recipes.DAL.Repository
                 string query = "INSERT INTO recipes (title, description, time, type, img, user_id) VALUES (@Title, @Description, @Time, @Type, @Img, 1)";
 
                 using SqlCommand command = new(query, connection);
-                connection.Open();
+                connection.Open();   
 
                 command.Parameters.AddWithValue("@Title", title);
                 command.Parameters.AddWithValue("@Description", description);
