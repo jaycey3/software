@@ -9,29 +9,32 @@ namespace MVC.Controllers
     {
         public ActionResult Index()
         {
-            List<Ingredient> ingredients = ingredientService.GetAllIngredients();
+            List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
             List<IngredientViewModel> ingredientViewModels = [];
 
-            foreach (Ingredient ingredient in ingredients)
+            if (ingredients != null)
             {
-                IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
-                ingredientViewModels.Add(ingredientViewModel);
+                foreach (Ingredient ingredient in ingredients)
+                {
+                    IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
+                    ingredientViewModels.Add(ingredientViewModel);
+                }
             }
             return View(ingredientViewModels);
         }
 
         public ActionResult Details(int id)
         {
-            Ingredient? ingredient = ingredientService.GetIngredientById(id);
+            Ingredient ingredient = ingredientService.GetIngredientById(id);
 
-            if (recipe == null)
+            if (ingredient == null)
             {
                 return NotFound();
             }
 
-            RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
+            IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
 
-            return View(recipeViewModel);
+            return View(ingredientViewModel);
         }
 
         public ActionResult Create()
@@ -41,35 +44,35 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(RecipeViewModel viewModel)
+        public ActionResult Create(IngredientViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+                    ingredientService.CreateIngredient(viewModel.Title, viewModel.Energy, viewModel.Protein, viewModel.Carbohydrates, viewModel.Sugar, viewModel.Fat, viewModel.SaturatedFat, viewModel.Salt, viewModel.Fibers);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("There was an error while trying to create recipe: " + ex);
+                    Console.WriteLine("There was an error while trying to create ingredient: " + ex);
                 }
             }
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Edit(RecipeViewModel viewModel)
+        public ActionResult Edit(IngredientViewModel viewModel)
         {
-            Recipe? recipe = recipeService.UpdateRecipe(viewModel.Id, viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+            Ingredient ingredient = ingredientService.UpdateIngredient(viewModel.Id, viewModel.Title, viewModel.Energy, viewModel.Protein, viewModel.Carbohydrates, viewModel.Sugar, viewModel.Fat, viewModel.SaturatedFat, viewModel.Salt, viewModel.Fibers);
 
-            if (recipe != null)
+            if (ingredient != null)
             {
                 return RedirectToAction("Index");
             }
             else
             {
-                Console.WriteLine("There was an error while trying to update recipe");
+                Console.WriteLine("There was an error while trying to update ingredient");
                 return View("Index");
             }
         }
@@ -77,47 +80,47 @@ namespace MVC.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
+            Ingredient ingredient = ingredientService.GetIngredientById(id);
 
-            if (recipe == null)
+            if (ingredient == null)
             {
                 return NotFound();
             }
 
-            RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
+            IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
 
-            return View(recipeViewModel);
+            return View(ingredientViewModel);
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
+            Ingredient ingredient = ingredientService.GetIngredientById(id);
 
-            if (recipe == null)
+            if (ingredient == null)
             {
                 return NotFound();
             }
 
-            RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
+            IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
 
-            return View(recipeViewModel); ;
+            return View(ingredientViewModel); ;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(RecipeViewModel viewModel)
+        public ActionResult Delete(IngredientViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    recipeService.DeleteRecipe(viewModel.Id);
+                    ingredientService.DeleteIngredient(viewModel.Id);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("There was an error while trying to delete recipe: " + ex);
+                    Console.WriteLine("There was an error while trying to delete ingredient: " + ex);
                 }
             }
             return View(viewModel);

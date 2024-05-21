@@ -7,13 +7,13 @@ namespace Recipes.Logic.Services
     {
         public List<RecipeModel>? GetAllRecipes()
         {
-            List<RecipeModel> recipes = recipeRepository.GetAllRecipes();
+            List<RecipeModel>? recipes = recipeRepository.GetAllRecipes();
             return recipes;
         }
 
         public RecipeModel? UpdateRecipe(int id, string title, string description, int time, string type, string img)
         {
-            RecipeModel recipe = recipeRepository.UpdateRecipe(id, title, description, time, type, img);  
+            RecipeModel? recipe = recipeRepository.UpdateRecipe(id, title, description, time, type, img);  
             return recipe;
         }
 

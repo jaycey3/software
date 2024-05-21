@@ -2,6 +2,7 @@
 using Recipes.Logic.Models;
 using System.Data.SqlClient;
 using Recipes.Logic.Interfaces;
+using System.Data;
 
 namespace Recipes.DAL.Repository
 {
@@ -55,12 +56,12 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel? UpdateIngredient(int id, string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
+        public IngredientModel UpdateIngredient(int id, string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
         {
             try
             {
                 dataAccess.OpenConnection();
-                string query = "UPDATE recipes SET title = @Title, energy = @Energy, protein = @Protein, carbohydrates = @Carbohydrates, sugar = @Sugar, fat = @Fat, saturated_fat = @SaturatedFat, salt = @Salt, fibers = @Fibers WHERE id = @Id";
+                string query = "UPDATE ingredients SET title = @Title, energy = @Energy, protein = @Protein, carbohydrates = @Carbohydrates, sugar = @Sugar, fat = @Fat, saturated_fat = @SaturatedFat, salt = @Salt, fibers = @Fibers WHERE id = @Id";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
@@ -104,7 +105,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel? GetIngredientById(int id)
+        public IngredientModel GetIngredientById(int id)
         {
             try
             {
@@ -148,24 +149,24 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel? CreateIngredient(string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
+        public IngredientModel CreateIngredient(string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
         {
             try
             {
                 dataAccess.OpenConnection();
-                string query = "INSERT INTO recipes (title, description, time, type, img, user_id) VALUES (@Title, @Description, @Time, @Type, @Img, 1)";
+                string query = "INSERT INTO ingredients (title, energy, protein, carbohydrates, sugar, fat, saturated_fat, salt, fibers) VALUES (@Title, @Energy, @Protein, @Carbohydrates, @Sugar, @Fat, @SaturatedFat, @Salt, @Fibers)";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
                 command.Parameters.AddWithValue("@Title", title);
                 command.Parameters.AddWithValue("@Energy", energy);
-                command.Parameters.AddWithValue("@Protein", protein);
-                command.Parameters.AddWithValue("@Carbohydrates", carbohydrates);
-                command.Parameters.AddWithValue("@Sugar", sugar);
-                command.Parameters.AddWithValue("@Fat", fat);
-                command.Parameters.AddWithValue("@SaturatedFat", saturatedfat);
-                command.Parameters.AddWithValue("@Salt", salt);
-                command.Parameters.AddWithValue("@Fibers", fibers);
+                command.Parameters.Add("@Protein", SqlDbType.Decimal).Value = protein;
+                command.Parameters.Add("@Carbohydrates", SqlDbType.Decimal).Value = carbohydrates;
+                command.Parameters.Add("@Sugar", SqlDbType.Decimal).Value = sugar;
+                command.Parameters.Add("@Fat", SqlDbType.Decimal).Value = fat;
+                command.Parameters.Add("@SaturatedFat", SqlDbType.Decimal).Value = saturatedfat;
+                command.Parameters.Add("@Salt", SqlDbType.Decimal).Value = salt;
+                command.Parameters.Add("@Fibers", SqlDbType.Decimal).Value = fibers;
 
                 command.ExecuteNonQuery();
 

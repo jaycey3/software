@@ -13,10 +13,13 @@ namespace Recipes.Controllers
             List<Recipe>? recipes = recipeService.GetAllRecipes();
             List<RecipeViewModel> recipeViewModels = [];
 
-            foreach (Recipe recipe in recipes)
+            if (recipes != null)
             {
-                RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
-                recipeViewModels.Add(recipeViewModel);
+                foreach (Recipe recipe in recipes)
+                {
+                    RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
+                    recipeViewModels.Add(recipeViewModel);
+                }
             }
             return View(recipeViewModels);
         }
@@ -102,7 +105,7 @@ namespace Recipes.Controllers
 
             RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
 
-            return View(recipeViewModel); ;
+            return View(recipeViewModel);
         }
 
         [HttpPost]
