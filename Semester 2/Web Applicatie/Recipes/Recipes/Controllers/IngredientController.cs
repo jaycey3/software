@@ -1,29 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Recipes.Logic.Services;
 using Recipes.Models;
-using Recipe = Recipes.Logic.Models.RecipeModel;
+using Ingredient = Recipes.Logic.Models.IngredientModel;
 
-namespace Recipes.Controllers
+namespace MVC.Controllers
 {
-    public class RecipeController(RecipeService recipeService) : Controller
+    public class IngredientController(IngredientService ingredientService) : Controller
     {
-        [HttpGet]
         public ActionResult Index()
         {
-            List<Recipe>? recipes = recipeService.GetAllRecipes();
-            List<RecipeViewModel> recipeViewModels = [];
+            List<Ingredient> ingredients = ingredientService.GetAllIngredients();
+            List<IngredientViewModel> ingredientViewModels = [];
 
-            foreach (Recipe recipe in recipes)
+            foreach (Ingredient ingredient in ingredients)
             {
-                RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
-                recipeViewModels.Add(recipeViewModel);
+                IngredientViewModel ingredientViewModel = ConvertIngredientToIngredientViewModel(ingredient);
+                ingredientViewModels.Add(ingredientViewModel);
             }
-            return View(recipeViewModels);
+            return View(ingredientViewModels);
         }
 
         public ActionResult Details(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
+            Ingredient? ingredient = ingredientService.GetIngredientById(id);
 
             if (recipe == null)
             {
@@ -124,21 +123,23 @@ namespace Recipes.Controllers
             return View(viewModel);
         }
 
-        private static RecipeViewModel ConvertRecipeToRecipeViewModel(Recipe recipe)
+        private static IngredientViewModel ConvertIngredientToIngredientViewModel(Ingredient ingredient)
         {
-            RecipeViewModel recipeViewModel = new()
+            IngredientViewModel ingredientViewModel = new()
             {
-                Id = recipe.Id,
-                Title = recipe.Title,
-                Description = recipe.Description,
-                Time = recipe.Time,
-                Type = recipe.Type,
-                Img = recipe.Img,
-                UserId = recipe.UserId,
-                UserName = recipe.UserName
+                Id = ingredient.Id,
+                Title = ingredient.Title,
+                Energy = ingredient.Energy,
+                Protein = ingredient.Protein,
+                Carbohydrates = ingredient.Carbohydrates,
+                Sugar = ingredient.Sugar,
+                Fat = ingredient.Fat,
+                SaturatedFat = ingredient.SaturatedFat,
+                Salt = ingredient.Salt,
+                Fibers = ingredient.Fibers
             };
 
-            return recipeViewModel;
+            return ingredientViewModel;
         }
     }
 }

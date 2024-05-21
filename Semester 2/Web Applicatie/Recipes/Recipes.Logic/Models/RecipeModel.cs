@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Recipes.Logic.Models
+﻿namespace Recipes.Logic.Models
 {
     public class RecipeModel
     {
