@@ -49,7 +49,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel UpdateIngredient(int id, string? title, string? type)
+        public IngredientModel? UpdateIngredient(int id, string? title, string? type)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel GetIngredientById(int id)
+        public IngredientModel? GetIngredientById(int id)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel CreateIngredient(string? title, string? type)
+        public IngredientModel? CreateIngredient(string? title, string? type)
         {
             try
             {

@@ -14,7 +14,7 @@ namespace Recipes.DAL.Repository
             dataAccess = new();
         }
 
-        public List<StepModel>? GetAllRecipes(int recipeId)
+        public List<StepModel>? GetAllSteps(int recipeId)
         {
             List<StepModel> method = [];
             try
@@ -120,7 +120,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public void DeleteRecipe(int id)
+        public void DeleteStep(int id)
         {
             try
             {
