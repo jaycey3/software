@@ -32,14 +32,7 @@ namespace Recipes.DAL.Repository
                     {
                         Id = Convert.ToInt32(reader["id"]),
                         Title = reader["title"].ToString(),
-                        Energy = Convert.ToInt32(reader["energy"]),
-                        Protein = Convert.ToDecimal(reader["protein"]),
-                        Carbohydrates = Convert.ToDecimal(reader["carbohydrates"]),
-                        Sugar = Convert.ToDecimal(reader["sugar"]),
-                        Fat = Convert.ToDecimal(reader["fat"]),
-                        SaturatedFat = Convert.ToDecimal(reader["saturated_fat"]),
-                        Salt = Convert.ToDecimal(reader["salt"]),
-                        Fibers = Convert.ToDecimal(reader["fibers"])
+                        Type = reader["type"].ToString()
                     };
                     ingredients.Add(ingredient);
                 }
@@ -56,25 +49,18 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel UpdateIngredient(int id, string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
+        public IngredientModel UpdateIngredient(int id, string? title, string? type)
         {
             try
             {
                 dataAccess.OpenConnection();
-                string query = "UPDATE ingredients SET title = @Title, energy = @Energy, protein = @Protein, carbohydrates = @Carbohydrates, sugar = @Sugar, fat = @Fat, saturated_fat = @SaturatedFat, salt = @Salt, fibers = @Fibers WHERE id = @Id";
+                string query = "UPDATE ingredients SET title = @Title, type = @Type WHERE id = @Id";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
                 command.Parameters.AddWithValue("@Id", id);
                 command.Parameters.AddWithValue("@Title", title);
-                command.Parameters.AddWithValue("@Energy", energy);
-                command.Parameters.AddWithValue("@Protein", protein);
-                command.Parameters.AddWithValue("@Carbohydrates", carbohydrates);
-                command.Parameters.AddWithValue("@Sugar", sugar);
-                command.Parameters.AddWithValue("@Fat", fat);
-                command.Parameters.AddWithValue("@SaturatedFat", saturatedfat);
-                command.Parameters.AddWithValue("@Salt", salt);
-                command.Parameters.AddWithValue("@Fibers", fibers);
+                command.Parameters.AddWithValue("@Type", type);
 
                 command.ExecuteReader();
 
@@ -82,14 +68,7 @@ namespace Recipes.DAL.Repository
                 {
                     Id = id,
                     Title = title,
-                    Energy = energy,
-                    Protein = protein,
-                    Carbohydrates = carbohydrates,
-                    Sugar = sugar,
-                    Fat = fat,
-                    SaturatedFat = saturatedfat,
-                    Salt = salt,
-                    Fibers = fibers,
+                    Type = type
                 };
 
                 return updatedIngredient;
@@ -123,16 +102,8 @@ namespace Recipes.DAL.Repository
                     {
                         Id = Convert.ToInt32(reader["id"]),
                         Title = reader["title"].ToString(),
-                        Energy = Convert.ToInt32(reader["energy"]),
-                        Protein = Convert.ToDecimal(reader["protein"]),
-                        Carbohydrates = Convert.ToDecimal(reader["carbohydrates"]),
-                        Sugar = Convert.ToDecimal(reader["sugar"]),
-                        Fat = Convert.ToDecimal(reader["fat"]),
-                        SaturatedFat = Convert.ToDecimal(reader["saturated_fat"]),
-                        Salt = Convert.ToDecimal(reader["salt"]),
-                        Fibers = Convert.ToDecimal(reader["fibers"])
+                        Type = reader["type"].ToString()
                     };
-
                     return ingredient;
                 }
                 return null;
@@ -149,38 +120,24 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public IngredientModel CreateIngredient(string? title, int energy, decimal protein, decimal carbohydrates, decimal sugar, decimal fat, decimal saturatedfat, decimal salt, decimal fibers)
+        public IngredientModel CreateIngredient(string? title, string? type)
         {
             try
             {
                 dataAccess.OpenConnection();
-                string query = "INSERT INTO ingredients (title, energy, protein, carbohydrates, sugar, fat, saturated_fat, salt, fibers) VALUES (@Title, @Energy, @Protein, @Carbohydrates, @Sugar, @Fat, @SaturatedFat, @Salt, @Fibers)";
+                string query = "INSERT INTO ingredients (title, type) VALUES (@Title, @Type)";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
                 command.Parameters.AddWithValue("@Title", title);
-                command.Parameters.AddWithValue("@Energy", energy);
-                command.Parameters.Add("@Protein", SqlDbType.Decimal).Value = protein;
-                command.Parameters.Add("@Carbohydrates", SqlDbType.Decimal).Value = carbohydrates;
-                command.Parameters.Add("@Sugar", SqlDbType.Decimal).Value = sugar;
-                command.Parameters.Add("@Fat", SqlDbType.Decimal).Value = fat;
-                command.Parameters.Add("@SaturatedFat", SqlDbType.Decimal).Value = saturatedfat;
-                command.Parameters.Add("@Salt", SqlDbType.Decimal).Value = salt;
-                command.Parameters.Add("@Fibers", SqlDbType.Decimal).Value = fibers;
+                command.Parameters.AddWithValue("@Type", type);
 
                 command.ExecuteNonQuery();
 
                 IngredientModel createdIngredient = new()
                 {
                     Title = title,
-                    Energy = energy,
-                    Protein = protein,
-                    Carbohydrates = carbohydrates,
-                    Sugar = sugar,
-                    Fat = fat,
-                    SaturatedFat = saturatedfat,
-                    Salt = salt,
-                    Fibers = fibers,
+                    Type = type
                 };
 
                 return createdIngredient;

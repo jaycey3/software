@@ -1,0 +1,7 @@
+﻿@model decimal
+
+@{
+    string displayValue = (Model % 1 == 0) ? Model.ToString("0") : Model.ToString("0.0");
+}
+
+@displayValue

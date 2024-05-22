@@ -50,7 +50,7 @@ namespace MVC.Controllers
             {
                 try
                 {
-                    ingredientService.CreateIngredient(viewModel.Title, viewModel.Energy, viewModel.Protein, viewModel.Carbohydrates, viewModel.Sugar, viewModel.Fat, viewModel.SaturatedFat, viewModel.Salt, viewModel.Fibers);
+                    ingredientService.CreateIngredient(viewModel.Title, viewModel.Type);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -64,7 +64,7 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult Edit(IngredientViewModel viewModel)
         {
-            Ingredient ingredient = ingredientService.UpdateIngredient(viewModel.Id, viewModel.Title, viewModel.Energy, viewModel.Protein, viewModel.Carbohydrates, viewModel.Sugar, viewModel.Fat, viewModel.SaturatedFat, viewModel.Salt, viewModel.Fibers);
+            Ingredient ingredient = ingredientService.UpdateIngredient(viewModel.Id, viewModel.Title, viewModel.Type);
 
             if (ingredient != null)
             {
@@ -132,14 +132,7 @@ namespace MVC.Controllers
             {
                 Id = ingredient.Id,
                 Title = ingredient.Title,
-                Energy = ingredient.Energy,
-                Protein = ingredient.Protein,
-                Carbohydrates = ingredient.Carbohydrates,
-                Sugar = ingredient.Sugar,
-                Fat = ingredient.Fat,
-                SaturatedFat = ingredient.SaturatedFat,
-                Salt = ingredient.Salt,
-                Fibers = ingredient.Fibers
+                Type = ingredient.Type
             };
 
             return ingredientViewModel;
