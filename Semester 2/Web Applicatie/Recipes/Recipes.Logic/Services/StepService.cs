@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Recipes.Logic.Interfaces;
+using Recipes.Logic.Models;
 
 namespace Recipes.Logic.Services
 {
-    internal class StepService
+    public class StepService(IStepRepository stepRepository)
     {
+
     }
 }
