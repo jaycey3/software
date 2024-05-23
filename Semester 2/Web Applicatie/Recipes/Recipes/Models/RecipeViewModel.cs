@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Recipes.Logic.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Recipes.Models
 {
@@ -18,5 +19,6 @@ namespace Recipes.Models
         public int UserId { get; set; }
         [Display(Name = "Gebruiker")]
         public string? UserName { get; set; }
-    }
+        public List<StepModel>? Steps { get; set; }
+        public List<IngredientModel>? Ingredients { get; set; }
 }
