@@ -1,4 +1,9 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿document.getElementById('addStep').addEventListener('click', function () {
+    let stepCount = document.querySelectorAll('#steps .step').length;
+    let stepContainer = document.createElement('div');
+    stepContainer.classList.add('step');
+    stepContainer.innerHTML = `<label asp-for="Steps">Step ${stepCount + 1}</label>
+                                       <input asp-for="Steps" name="Steps[${stepCount}].Description" class="form-control" />
+                                       <input asp-for="Steps" type="hidden" name="Steps[${stepCount}].Order" value="${stepCount + 1}" />`;
+    document.getElementById('steps').appendChild(stepContainer);
+});

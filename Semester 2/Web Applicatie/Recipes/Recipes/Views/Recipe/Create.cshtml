@@ -1,4 +1,4 @@
-﻿@model Recipes.Logic.Models.RecipeModel
+﻿@model Recipes.Models.RecipeViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -43,6 +43,17 @@
                 <label asp-for="Img" class="control-label"></label>
                 <input asp-for="Img" class="form-control" />
                 <span asp-validation-for="Img" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Steps</label>
+                <div id="steps">
+                    <div class="step" asp-for="Steps">
+                        <label asp-for="Steps">Step 1</label>
+                        <input asp-for="Steps" name="Steps[0].Description" class="form-control" />
+                        <input asp-for="Steps" type="hidden" name="Steps[0].Order" value="1" />
+                    </div>
+                </div>
+                <button type="button" id="addStep" class="btn btn-secondary">Add Step</button>
             </div>
             <div class="form-group mt-2">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">

@@ -14,42 +14,6 @@ namespace Recipes.DAL.Repository
             dataAccess = new();
         }
 
-        public List<StepModel>? GetAllSteps(int recipeId)
-        {
-            List<StepModel> method = [];
-            try
-            {
-                dataAccess.OpenConnection();
-                string query = "SELECT * FROM steps WHERE recipe_id = @RecipeId";
-
-                using SqlCommand command = new(query, dataAccess.Connection);
-                command.Parameters.AddWithValue("@RecipeId", recipeId);
-
-                using SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    StepModel step = new()
-                    {
-                        Id = Convert.ToInt32(reader["id"]),
-                        Order = Convert.ToInt32(reader["order"]),
-                        Description = reader["description"].ToString(),
-                        RecipeId = Convert.ToInt32(reader["recipe_id"])
-                    };
-                    method.Add(step);
-                }
-                return method;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            finally
-            {
-                dataAccess.CloseConnection();
-            }
-        }
-
         public StepModel? UpdateStep(int id, int order, string? description)
         {
             try
@@ -90,7 +54,7 @@ namespace Recipes.DAL.Repository
             try
             {
                 dataAccess.OpenConnection();
-                string query = "INSERT INTO recipes (order, description, recipe_id) VALUES (@Order, @Description, @RecipeId)";
+                string query = "INSERT INTO steps ([order], description, recipe_id) VALUES (@Order, @Description, @RecipeId)";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 

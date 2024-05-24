@@ -10,8 +10,12 @@ builder.Services.AddControllersWithViews();
 // Register repositories and services
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IStepRepository, StepRepository>();
+builder.Services.AddScoped<IRecipeIngredientRepository,  RecipeIngredientRepository>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<IngredientService>();
+builder.Services.AddScoped<StepService>();
+builder.Services.AddScoped<RecipeIngredientService>();
 
 var app = builder.Build();
 

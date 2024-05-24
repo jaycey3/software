@@ -122,8 +122,10 @@ namespace Recipes.DAL.Repository
                         Type = reader["type"].ToString(),
                         Img = reader["img"].ToString(),
                         UserId = Convert.ToInt32(reader["user_id"]),
-                        UserName = reader["first_name"].ToString()
+                        UserName = reader["first_name"].ToString(),
+                        Steps = GetStepsByRecipeId(id),
                     };
+
 
                     return recipe;
                 }
@@ -146,7 +148,7 @@ namespace Recipes.DAL.Repository
             try
             {
                 dataAccess.OpenConnection();
-                string query = "INSERT INTO recipes (title, description, time, type, img, user_id) VALUES (@Title, @Description, @Time, @Type, @Img, 1)";
+                string query = "INSERT INTO recipes (title, description, time, type, img, user_id) VALUES (@Title, @Description, @Time, @Type, @Img, 1); SELECT SCOPE_IDENTITY();";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
@@ -156,10 +158,11 @@ namespace Recipes.DAL.Repository
                 command.Parameters.AddWithValue("@Type", type);
                 command.Parameters.AddWithValue("@Img", img);
 
-                command.ExecuteNonQuery();
+                int insertedId = Convert.ToInt32(command.ExecuteScalar());
 
-                RecipeModel createdRecipe = new()
+                RecipeModel recipe = new()
                 {
+                    Id = insertedId,
                     Title = title,
                     Description = description,
                     Time = time,
@@ -167,8 +170,7 @@ namespace Recipes.DAL.Repository
                     Img = img,
                 };
 
-                return createdRecipe;
-
+                return recipe;
             }
             catch (Exception ex)
             {
@@ -201,6 +203,37 @@ namespace Recipes.DAL.Repository
             finally
             {
                 dataAccess.CloseConnection();
+            }
+        }
+
+        private List<StepModel>? GetStepsByRecipeId(int recipeId)
+        {
+            List<StepModel> steps = [];
+            try
+            {
+                string query = "SELECT * FROM steps WHERE recipe_id = @RecipeId";
+
+                using SqlCommand command = new(query, dataAccess.Connection);
+                command.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                using SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    StepModel step = new()
+                    {
+                        Id = Convert.ToInt32(reader["id"]),
+                        Order = Convert.ToInt32(reader["order"]),
+                        Description = reader["description"].ToString(),
+                        RecipeId = Convert.ToInt32(reader["recipe_id"])
+                    };
+                    steps.Add(step);
+                }
+                return steps;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
             }
         }
     }

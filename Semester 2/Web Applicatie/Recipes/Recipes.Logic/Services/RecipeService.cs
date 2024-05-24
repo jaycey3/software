@@ -5,6 +5,7 @@ namespace Recipes.Logic.Services
 {
     public class RecipeService(IRecipeRepository recipeRepository)
     {
+
         public List<RecipeModel>? GetAllRecipes()
         {
             List<RecipeModel>? recipes = recipeRepository.GetAllRecipes();

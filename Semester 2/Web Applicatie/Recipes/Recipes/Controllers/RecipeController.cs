@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Recipes.Logic.Models;
 using Recipes.Logic.Services;
 using Recipes.Models;
 using Recipe = Recipes.Logic.Models.RecipeModel;
 
 namespace Recipes.Controllers
 {
-    public class RecipeController(RecipeService recipeService) : Controller
+    public class RecipeController(RecipeService recipeService, StepService stepService) : Controller
     {
         [HttpGet]
         public ActionResult Index()
@@ -51,7 +52,16 @@ namespace Recipes.Controllers
             {
                 try
                 {
-                    recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+                    var newRecipe = recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+                    if (newRecipe != null)
+                    {
+                        foreach (var step in viewModel.Steps)
+                        {
+                            step.RecipeId = newRecipe.Id;
+                            stepService.CreateStep(step.Order, step.Description, step.RecipeId);
+                        }
+                    }
+
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -138,7 +148,8 @@ namespace Recipes.Controllers
                 Type = recipe.Type,
                 Img = recipe.Img,
                 UserId = recipe.UserId,
-                UserName = recipe.UserName
+                UserName = recipe.UserName,
+                Steps = recipe.Steps
             };
 
             return recipeViewModel;

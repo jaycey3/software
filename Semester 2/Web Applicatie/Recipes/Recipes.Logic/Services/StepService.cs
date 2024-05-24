@@ -5,12 +5,6 @@ namespace Recipes.Logic.Services
 {
     public class StepService(IStepRepository stepRepository)
     {
-        public List<StepModel>? GetAllSteps(int recipeId)
-        {
-            List<StepModel>? method = stepRepository.GetAllSteps(recipeId);
-            return method;
-        }
-
         public StepModel? UpdateRecipe(int id, int order, string description)
         {
             StepModel? step = stepRepository.UpdateStep(id, order, description);

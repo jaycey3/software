@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Recipes.DAL.Repository
 {
-    public class RecipeIngredientRepository : IIngredientRepository
+    public class RecipeIngredientRepository : IRecipeIngredientRepository
     {
         private readonly DataAccess dataAccess;
 

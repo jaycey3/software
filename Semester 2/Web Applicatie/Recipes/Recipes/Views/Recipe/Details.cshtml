@@ -40,6 +40,15 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UserName)
         </dd>
+        @foreach (var step in Model.Steps)
+        {
+            <dt class="col-sm-2">
+                Stap @step.Order
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => step.Description)
+            </dd>
+        }
     </dl>
 </div>
 <div>
