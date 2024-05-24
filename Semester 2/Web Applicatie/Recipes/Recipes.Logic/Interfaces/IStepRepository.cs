@@ -7,5 +7,6 @@ namespace Recipes.Logic.Interfaces
         StepModel? UpdateStep(int id, int order, string description);
         StepModel? CreateStep(int order, string description, int recipeId);
         void DeleteStep(int id);
+        void DeleteStepsByRecipeId(int recipeId);
     }
 }

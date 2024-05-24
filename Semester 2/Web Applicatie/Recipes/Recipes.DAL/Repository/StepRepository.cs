@@ -19,7 +19,7 @@ namespace Recipes.DAL.Repository
             try
             {
                 dataAccess.OpenConnection();
-                string query = "UPDATE steps SET order = @Order, description = @Description WHERE id = @Id";
+                string query = "UPDATE steps SET [order] = @Order, description = @Description WHERE id = @Id";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
@@ -99,7 +99,30 @@ namespace Recipes.DAL.Repository
             }
             catch (Exception ex)
             {
-                Console.WriteLine("There was an error while trying to delete the recipe: " + ex);
+                Console.WriteLine("There was an error while trying to delete the step: " + ex);
+            }
+            finally
+            {
+                dataAccess.CloseConnection();
+            }
+        }
+
+        public void DeleteStepsByRecipeId(int recipeId)
+        {
+            try
+            {
+                dataAccess.OpenConnection();
+                string query = "DELETE FROM steps WHERE recipe_id = @RecipeId";
+
+                using SqlCommand command = new(query, dataAccess.Connection);
+
+                command.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("There was an error while trying to delete steps: " + ex);
             }
             finally
             {

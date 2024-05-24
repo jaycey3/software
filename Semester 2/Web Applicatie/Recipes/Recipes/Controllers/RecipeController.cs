@@ -79,6 +79,10 @@ namespace Recipes.Controllers
 
             if (recipe != null)
             {
+                foreach (var step in viewModel.Steps)
+                {
+                    stepService.UpdateStep(step.Id, step.Order, step.Description);
+                }
                 return RedirectToAction("Index");
             }
             else
@@ -126,6 +130,7 @@ namespace Recipes.Controllers
             {
                 try
                 {
+                    stepService.DeleteStepsByRecipeId(viewModel.Id);
                     recipeService.DeleteRecipe(viewModel.Id);
                     return RedirectToAction("Index");
                 }
@@ -136,6 +141,7 @@ namespace Recipes.Controllers
             }
             return View(viewModel);
         }
+
 
         private static RecipeViewModel ConvertRecipeToRecipeViewModel(Recipe recipe)
         {

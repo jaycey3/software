@@ -5,7 +5,7 @@ namespace Recipes.Logic.Services
 {
     public class StepService(IStepRepository stepRepository)
     {
-        public StepModel? UpdateRecipe(int id, int order, string description)
+        public StepModel? UpdateStep(int id, int order, string description)
         {
             StepModel? step = stepRepository.UpdateStep(id, order, description);
             return step;
@@ -20,6 +20,12 @@ namespace Recipes.Logic.Services
         public string? DeleteStep(int id)
         {
             stepRepository.DeleteStep(id);
+            return null;
+        }
+
+        public string? DeleteStepsByRecipeId(int recipeId)
+        {
+            stepRepository.DeleteStepsByRecipeId(recipeId);
             return null;
         }
     }
