@@ -3,10 +3,11 @@ using Recipes.Logic.Models;
 using Recipes.Logic.Services;
 using Recipes.Models;
 using Recipe = Recipes.Logic.Models.RecipeModel;
+using Ingredient = Recipes.Logic.Models.IngredientModel;
 
 namespace Recipes.Controllers
 {
-    public class RecipeController(RecipeService recipeService, StepService stepService) : Controller
+    public class RecipeController(RecipeService recipeService, StepService stepService, IngredientService ingredientService) : Controller
     {
         [HttpGet]
         public ActionResult Index()
@@ -41,6 +42,10 @@ namespace Recipes.Controllers
 
         public ActionResult Create()
         {
+            List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
+
+            ViewBag.Ingredients = ingredients;
+
             return View();
         }
 

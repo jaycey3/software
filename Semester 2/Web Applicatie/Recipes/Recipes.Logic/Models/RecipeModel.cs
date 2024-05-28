@@ -11,6 +11,6 @@
         public int UserId { get; set; }
         public string? UserName { get; set; }
         public List<StepModel>? Steps { get; set; }
-        public List<IngredientModel>? Ingredients { get; set; }
+        public List<RecipeIngredientModel>? Ingredients { get; set; }
     }
 }

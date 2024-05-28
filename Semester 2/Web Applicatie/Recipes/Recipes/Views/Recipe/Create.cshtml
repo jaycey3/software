@@ -48,13 +48,36 @@
                 <label>Bereidingswijze</label>
                 <div id="steps">
                     <div class="step" asp-for="Steps">
-                        <label asp-for="Steps">Step 1</label>
+                        <label asp-for="Steps">Stap 1</label>
                         <textarea asp-for="Steps" name="Steps[0].Description" class="form-control" rows="3"></textarea>
                         <input asp-for="Steps" type="hidden" name="Steps[0].Order" value="1" />
                     </div>
                 </div>
                 <button type="button" id="addStep" class="btn btn-primary btn-sm mt-2">Stap toevoegen</button>
             </div>
+            <div class="form-group">
+                <label>Ingrediënten</label>
+                <div id="ingredients">
+                    <div asp-for="Ingredients" class="input-group ingredient">
+                        <select asp-for="Ingredients[0].IngredientId" class="form-select form-select-sm">
+                            @foreach (var ingredient in ViewBag.Ingredients)
+                            {
+                                <option value="ingredient.Id">@ingredient.Title</option>
+                            }
+                        </select>
+                        <input asp-for="Ingredients[0].Quantity" type="number" class="form-control">
+                        <select asp-for="Ingredients[0].Unit" class="form-select form-select-sm">
+                            <option value="Gram">Gram</option>
+                            <option value="Mililiter">Mililiter</option>
+                            <option value="Stuks">Stuks</option>
+                            <option value="Theelepel">Theelepel</option>
+                            <option value="Eetlepel">Eetlepel</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" id="addIngredient" class="btn btn-primary btn-sm mt-2">Ingredient toevoegen</button>
+            </div>
+
             <div class="form-group mt-2">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <input type="submit" value="Create" class="btn btn-success btn-sm" />
@@ -66,5 +89,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
