@@ -7,7 +7,10 @@ using Ingredient = Recipes.Logic.Models.IngredientModel;
 
 namespace Recipes.Controllers
 {
-    public class RecipeController(RecipeService recipeService, StepService stepService, IngredientService ingredientService) : Controller
+    public class RecipeController(RecipeService recipeService, 
+        StepService stepService, 
+        IngredientService ingredientService, 
+        RecipeIngredientService recipeIngredientService) : Controller
     {
         [HttpGet]
         public ActionResult Index()
@@ -53,6 +56,7 @@ namespace Recipes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(RecipeViewModel viewModel)
         {
+
             if (ModelState.IsValid)
             {
                 try
@@ -64,6 +68,12 @@ namespace Recipes.Controllers
                         {
                             step.RecipeId = newRecipe.Id;
                             stepService.CreateStep(step.Order, step.Description, step.RecipeId);
+                        }
+
+                        foreach (var ingredient in viewModel.Ingredients)
+                        {
+                            ingredient.RecipeId = newRecipe.Id;
+                            recipeIngredientService.AddIngredient(ingredient.RecipeId, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
                         }
                     }
 

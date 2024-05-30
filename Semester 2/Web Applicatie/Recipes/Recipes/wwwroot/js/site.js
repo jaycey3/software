@@ -11,20 +11,26 @@
 document.getElementById('addIngredient').addEventListener('click', function () {
     let ingredientCount = document.querySelectorAll('#ingredients .ingredient').length;
     let ingredientContainer = document.createElement('div');
-    ingredientContainer.classList.add('ingredient');
-    ingredientContainer.innerHTML = `<select asp-for="Ingredients[ingredientCount].IngredientId" class="form-select form-select-sm">
-                            @foreach (var ingredient in ViewBag.Ingredients)
-                            {
-                                <option value="ingredient.Id">@ingredient.Title</option>
-                            }
-                        </select>
-                        <input asp-for="Ingredients[ingredientCount].Quantity" type="number" class="form-control">
-                        <select asp-for="Ingredients[ingredientCount].Unit" class="form-select form-select-sm">
-                            <option value="Gram">Gram</option>
-                            <option value="Mililiter">Mililiter</option>
-                            <option value="Stuks">Stuks</option>
-                            <option value="Theelepel">Theelepel</option>
-                            <option value="Eetlepel">Eetlepel</option>
-                        </select>`;
+    ingredientContainer.classList.add('input-group', 'ingredient');
+
+    let ingredientOptions;
+
+    ingredients.forEach(function (ingredient) {
+        ingredientOptions += `<option value="${ingredient.id}">${ingredient.title}</option>`;
+    });
+
+    let select = `<select asp-for="Ingredients[${ingredientCount}].IngredientId" class="form-select form-select-sm">
+    ${ingredientOptions}
+    </select>`
+
+    ingredientContainer.innerHTML = `${select}
+                        <input asp-for="Ingredients[0].Quantity" type="number" class="form-control">
+                            <select asp-for="Ingredients[0].Unit" class="form-select form-select-sm">
+                                <option value="Gram">Gram</option>
+                                <option value="Milliliter">Milliliter</option>
+                                <option value="Stuks">Stuks</option>
+                                <option value="Theelepel">Theelepel</option>
+                                <option value="Eetlepel">Eetlepel</option>
+                            </select>`;
     document.getElementById('ingredients').appendChild(ingredientContainer);
 });

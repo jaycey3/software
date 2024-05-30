@@ -62,13 +62,13 @@
                         <select asp-for="Ingredients[0].IngredientId" class="form-select form-select-sm">
                             @foreach (var ingredient in ViewBag.Ingredients)
                             {
-                                <option value="ingredient.Id">@ingredient.Title</option>
+                                <option value="@ingredient.Id">@ingredient.Title</option>
                             }
                         </select>
                         <input asp-for="Ingredients[0].Quantity" type="number" class="form-control">
                         <select asp-for="Ingredients[0].Unit" class="form-select form-select-sm">
                             <option value="Gram">Gram</option>
-                            <option value="Mililiter">Mililiter</option>
+                            <option value="Milliliter">Milliliter</option>
                             <option value="Stuks">Stuks</option>
                             <option value="Theelepel">Theelepel</option>
                             <option value="Eetlepel">Eetlepel</option>
@@ -87,6 +87,11 @@
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+    var ingredients = @Html.Raw(Json.Serialize(ViewBag.Ingredients));
+</script>
+
 
 @section Scripts {
     @{

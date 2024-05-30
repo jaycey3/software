@@ -92,7 +92,7 @@ namespace Recipes.DAL.Repository
             try
             {
                 dataAccess.OpenConnection();
-                string query = "INSERT INTO recipe_ingredients SET recipe_id = @RecipeId, ingredient_id = @IngredientId, quantity = @Quantity, unit = @Unit";
+                string query = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES(@RecipeId, @IngredientId, @Quantity, @Unit)";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
