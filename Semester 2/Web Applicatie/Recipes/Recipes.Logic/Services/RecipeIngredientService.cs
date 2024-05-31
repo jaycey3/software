@@ -28,5 +28,11 @@ namespace Recipes.Logic.Services
             recipeIngredientRepository.RemoveIngredient(recipeId, ingredientId);
             return null;
         }
+
+        public string? DeleteRecipeIngredients(int recipeId)
+        {
+            recipeIngredientRepository.DeleteRecipeIngredients(recipeId);
+            return null;
+        }
     }
 }

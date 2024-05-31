@@ -47,7 +47,6 @@ namespace Recipes.DAL.Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
             }
             finally
             {
@@ -124,6 +123,7 @@ namespace Recipes.DAL.Repository
                         UserId = Convert.ToInt32(reader["user_id"]),
                         UserName = reader["first_name"].ToString(),
                         Steps = GetStepsByRecipeId(id),
+                        Ingredients = GetRecipeIngredients(id)
                     };
 
 
@@ -229,6 +229,42 @@ namespace Recipes.DAL.Repository
                     steps.Add(step);
                 }
                 return steps;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        private List<RecipeIngredientModel>? GetRecipeIngredients(int recipeId)
+        {
+            List<RecipeIngredientModel> ingredients = [];
+            try
+            {
+                string query = "SELECT ri.recipe_id, ri.ingredient_id, ri.quantity, ri.unit, i.title " +
+                               "FROM recipe_ingredients ri " +
+                               "JOIN ingredients i ON ri.ingredient_id = i.id " +
+                               "WHERE ri.recipe_id = @RecipeId";
+
+                using SqlCommand command = new(query, dataAccess.Connection);
+
+                command.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                using SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    RecipeIngredientModel ingredient = new()
+                    {
+                        RecipeId = Convert.ToInt32(reader["recipe_id"]),
+                        IngredientId = Convert.ToInt32(reader["ingredient_id"]),
+                        Quantity = Convert.ToDecimal(reader["quantity"]),
+                        Unit = reader["unit"].ToString(),
+                        Title = reader["title"].ToString()
+                    };
+                    ingredients.Add(ingredient);
+                }
+                return ingredients;
             }
             catch (Exception ex)
             {

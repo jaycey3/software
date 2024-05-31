@@ -49,6 +49,15 @@
                 @Html.DisplayFor(model => step.Description)
             </dd>
         }
+        @foreach (var ingredient in Model.Ingredients)
+        {
+            <dt class="col-sm-2">
+                @ingredient.Title
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => ingredient.Quantity) @Html.DisplayFor(model => ingredient.Unit)
+            </dd>
+        }
     </dl>
 </div>
 <div>

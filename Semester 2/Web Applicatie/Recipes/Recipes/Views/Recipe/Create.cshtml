@@ -58,7 +58,7 @@
             <div class="form-group">
                 <label>Ingrediënten</label>
                 <div id="ingredients">
-                    <div asp-for="Ingredients" class="input-group ingredient">
+                    <div asp-for="Ingredients" class="ingredient input-group">
                         <select asp-for="Ingredients[0].IngredientId" class="form-select form-select-sm">
                             @foreach (var ingredient in ViewBag.Ingredients)
                             {

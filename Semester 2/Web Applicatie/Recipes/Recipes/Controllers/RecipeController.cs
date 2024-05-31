@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Recipes.Logic.Models;
 using Recipes.Logic.Services;
 using Recipes.Models;
 using Recipe = Recipes.Logic.Models.RecipeModel;
@@ -26,6 +25,17 @@ namespace Recipes.Controllers
                     recipeViewModels.Add(recipeViewModel);
                 }
             }
+
+            if (TempData["SuccessMessage"] != null)
+            {
+                ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            }
+
+            if (TempData["ErrorMessage"] != null)
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"];
+            }
+
             return View(recipeViewModels);
         }
 
@@ -56,7 +66,6 @@ namespace Recipes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(RecipeViewModel viewModel)
         {
-
             if (ModelState.IsValid)
             {
                 try
@@ -77,11 +86,12 @@ namespace Recipes.Controllers
                         }
                     }
 
+                    TempData["SuccessMessage"] = "Recept succesvol aangemaakt!";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("There was an error while trying to create recipe: " + ex);
+                    TempData["ErrorMessage"] = "Er is een error opgetreden bij het aanmaken van een recept!";
                 }
             }
             return View(viewModel);
@@ -98,11 +108,16 @@ namespace Recipes.Controllers
                 {
                     stepService.UpdateStep(step.Id, step.Order, step.Description);
                 }
+                foreach (var ingredient in viewModel.Ingredients)
+                {
+                    recipeIngredientService.UpdateIngredient(viewModel.Id, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
+                }
+                TempData["SuccessMessage"] = "Recept succesvol opgeslagen!";
                 return RedirectToAction("Index");
             }
             else
             {
-                Console.WriteLine("There was an error while trying to update recipe");
+                TempData["ErrorMessage"] = "Er is een error opgetreden bij het opslaan van het recept!";
                 return View("Index");
             }
         }
@@ -111,6 +126,9 @@ namespace Recipes.Controllers
         public ActionResult Edit(int id)
         {
             Recipe? recipe = recipeService.GetRecipeById(id);
+            List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
+
+            ViewBag.Ingredients = ingredients;
 
             if (recipe == null)
             {
@@ -146,17 +164,19 @@ namespace Recipes.Controllers
                 try
                 {
                     stepService.DeleteStepsByRecipeId(viewModel.Id);
+                    recipeIngredientService.DeleteRecipeIngredients(viewModel.Id);
                     recipeService.DeleteRecipe(viewModel.Id);
+                    TempData["SuccessMessage"] = "Recept succesvol verwijderd!";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    TempData["ErrorMessage"] = "Er is een error opgetreden tijdens het verwijderen van het recept!";
                     Console.WriteLine("There was an error while trying to delete recipe: " + ex);
                 }
             }
             return View(viewModel);
         }
-
 
         private static RecipeViewModel ConvertRecipeToRecipeViewModel(Recipe recipe)
         {
@@ -170,7 +190,8 @@ namespace Recipes.Controllers
                 Img = recipe.Img,
                 UserId = recipe.UserId,
                 UserName = recipe.UserName,
-                Steps = recipe.Steps
+                Steps = recipe.Steps,
+                Ingredients = recipe.Ingredients
             };
 
             return recipeViewModel;

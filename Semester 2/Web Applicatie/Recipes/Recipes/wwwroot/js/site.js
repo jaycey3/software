@@ -13,19 +13,19 @@ document.getElementById('addIngredient').addEventListener('click', function () {
     let ingredientContainer = document.createElement('div');
     ingredientContainer.classList.add('input-group', 'ingredient');
 
-    let ingredientOptions;
+    let ingredientOptions = '';
 
     ingredients.forEach(function (ingredient) {
         ingredientOptions += `<option value="${ingredient.id}">${ingredient.title}</option>`;
     });
 
-    let select = `<select asp-for="Ingredients[${ingredientCount}].IngredientId" class="form-select form-select-sm">
+    let select = `<select name="Ingredients[${ingredientCount}].IngredientId" class="form-select form-select-sm">
     ${ingredientOptions}
-    </select>`
+    </select>`;
 
     ingredientContainer.innerHTML = `${select}
-                        <input asp-for="Ingredients[0].Quantity" type="number" class="form-control">
-                            <select asp-for="Ingredients[0].Unit" class="form-select form-select-sm">
+                        <input name="Ingredients[${ingredientCount}].Quantity" type="number" class="form-control">
+                            <select name="Ingredients[${ingredientCount}].Unit" class="form-select form-select-sm">
                                 <option value="Gram">Gram</option>
                                 <option value="Milliliter">Milliliter</option>
                                 <option value="Stuks">Stuks</option>

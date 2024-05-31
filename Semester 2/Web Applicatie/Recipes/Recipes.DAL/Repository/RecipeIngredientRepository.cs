@@ -148,5 +148,28 @@ namespace Recipes.DAL.Repository
                 dataAccess.CloseConnection();
             }
         }
+
+        public void DeleteRecipeIngredients(int recipeId)
+        {
+            try
+            {
+                dataAccess.OpenConnection();
+                string query = "DELETE FROM recipe_ingredients WHERE recipe_id = @RecipeId";
+
+                using SqlCommand command = new(query, dataAccess.Connection);
+
+                command.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("There was an error while trying to delete ingredients: " + ex);
+            }
+            finally
+            {
+                dataAccess.CloseConnection();
+            }
+        }
     }
 }

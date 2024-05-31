@@ -129,6 +129,5 @@ namespace Recipes.DAL.Repository
                 dataAccess.CloseConnection();
             }
         }
-
     }
 }
