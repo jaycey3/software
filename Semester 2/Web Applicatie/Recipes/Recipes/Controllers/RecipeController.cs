@@ -116,7 +116,7 @@ namespace Recipes.Controllers
                     }
                     foreach (var ingredient in viewModel.Ingredients)
                     {
-                        recipeIngredientService.UpdateIngredient(viewModel.Id, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
+                        recipeIngredientService.UpdateIngredient(viewModel.Id, ingredient.IngredientId, ingredient.NewIngredientId, ingredient.Quantity, ingredient.Unit);
                     }
                 }
 
@@ -141,7 +141,8 @@ namespace Recipes.Controllers
                 List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
                 ViewBag.Ingredients = ingredients;
                 return View(recipeViewModel);
-            } else
+            }
+            else
             {
                 TempData["ErrorMessage"] = errorMessage;
                 return NotFound();
@@ -157,7 +158,8 @@ namespace Recipes.Controllers
             {
                 RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
                 return View(recipeViewModel);
-            } else
+            }
+            else
             {
                 TempData["ErrorMessage"] = errorMessage;
                 return NotFound();
@@ -168,22 +170,31 @@ namespace Recipes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(RecipeViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                (string? successMessage, string? errorMessage) = recipeService.DeleteRecipe(viewModel.Id);
-                if (errorMessage != null)
-                {
-                    stepService.DeleteStepsByRecipeId(viewModel.Id);
-                    recipeIngredientService.DeleteRecipeIngredients(viewModel.Id);
+            string? errorMessage = null;
 
+            try
+            {
+                stepService.DeleteStepsByRecipeId(viewModel.Id);
+                recipeIngredientService.DeleteRecipeIngredients(viewModel.Id);
+
+                (string? successMessage, string? deleteRecipeErrorMessage) = recipeService.DeleteRecipe(viewModel.Id);
+
+                if (deleteRecipeErrorMessage == null)
+                {
                     TempData["SuccessMessage"] = successMessage;
                     return RedirectToAction("Index");
-                } else
+                }
+                else
                 {
-                    TempData["ErrorMessage"] = errorMessage;
+                    errorMessage = deleteRecipeErrorMessage;
+                    return RedirectToAction("Index");
                 }
             }
-            return View(viewModel);
+            catch
+            {
+                TempData["ErrorMessage"] = errorMessage;
+                return RedirectToAction("Index");
+            }
         }
 
         private static RecipeViewModel ConvertRecipeToRecipeViewModel(Recipe recipe)

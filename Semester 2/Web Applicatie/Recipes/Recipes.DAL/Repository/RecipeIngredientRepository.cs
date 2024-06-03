@@ -50,17 +50,18 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeIngredientModel? UpdateIngredient(int recipeId, int ingredientId, decimal quantity, string? unit)
+        public RecipeIngredientModel? UpdateIngredient(int recipeId, int oldIngredientId, int newIngredientId, decimal quantity, string? unit)
         {
             try
             {
                 dataAccess.OpenConnection();
-                string query = "UPDATE recipe_ingredients SET quantity = @Quantity, unit = @Unit WHERE recipe_id = @RecipeId AND ingredient_id = @IngredientId";
+                string query = "UPDATE recipe_ingredients SET ingredient_id = @NewIngredientId, quantity = @Quantity, unit = @Unit WHERE recipe_id = @RecipeId AND ingredient_id = @OldIngredientId";
 
                 using SqlCommand command = new(query, dataAccess.Connection);
 
                 command.Parameters.AddWithValue("@RecipeId", recipeId);
-                command.Parameters.AddWithValue("@IngredientId", ingredientId);
+                command.Parameters.AddWithValue("@OldIngredientId", oldIngredientId);
+                command.Parameters.AddWithValue("@NewIngredientId", newIngredientId);
                 command.Parameters.AddWithValue("@Quantity", quantity);
                 command.Parameters.AddWithValue("@Unit", unit);
 
@@ -69,7 +70,7 @@ namespace Recipes.DAL.Repository
                 RecipeIngredientModel updatedIngredient = new()
                 {
                     RecipeId = recipeId,
-                    IngredientId = ingredientId,
+                    NewIngredientId = newIngredientId,
                     Quantity = quantity,
                     Unit = unit
                 };

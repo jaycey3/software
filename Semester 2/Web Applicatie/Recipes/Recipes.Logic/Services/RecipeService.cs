@@ -7,14 +7,14 @@ namespace Recipes.Logic.Services
     {
         public (List<RecipeModel>?, string?) GetAllRecipes()
         {
-            List<RecipeModel>? recipes = recipeRepository.GetAllRecipes();
+            (List<RecipeModel>? recipes, string? errorMessage)  = recipeRepository.GetAllRecipes();
 
             if (recipes != null)
             {
                 return (recipes, null);
             } else
             {
-                return (null, "Er is iets fout gegaan tijdens het ophalen van de recepten.");
+                return (null, errorMessage);
             }
         }
 
@@ -25,28 +25,28 @@ namespace Recipes.Logic.Services
                 return (null, "Niet alle velden zijn correct ingevuld. Probeer het opnieuw.");
             }
 
-            RecipeModel? recipe = recipeRepository.UpdateRecipe(id, title, description, time, type, img);
+            (RecipeModel? recipe, string? message) = recipeRepository.UpdateRecipe(id, title, description, time, type, img);
 
             if (recipe != null)
             {
-                return (recipe, "Recept succesvol opgeslagen!");
+                return (recipe, message);
             }
             else
             {
-                return (null, "Er is iets fout gegaan bij het bewerken van het recept.");
+                return (null, message);
             }
         }
 
         public (RecipeModel?, string?) GetRecipeById(int id)
         {
-            RecipeModel? recipe = recipeRepository.GetRecipeById(id);
+            (RecipeModel? recipe, string? message) = recipeRepository.GetRecipeById(id);
             if (recipe != null)
             {
                 return (recipe, null);
             }
             else
             {
-                return (null, "Er is iets fout gegaan tijdens het ophalen van het recept.");
+                return (null, message);
             }
         }
 
@@ -57,26 +57,27 @@ namespace Recipes.Logic.Services
                 return (null, "Niet alle velden zijn correct ingevuld. Probeer het opnieuw.");
             }
 
-            RecipeModel? recipe = recipeRepository.CreateRecipe(title, description, time, type, img);
+            (RecipeModel? recipe, string? message) = recipeRepository.CreateRecipe(title, description, time, type, img);
 
             if (recipe != null)
             {
-                return (recipe, "Recept succesvol aangemaakt!");
+                return (recipe, message);
             } else
             {
-                return (null, "Er is iets fout gegaan bij het aanmaken van het recept.");
+                return (null, message);
             }
         }
 
         public (string?, string?) DeleteRecipe(int id)
         {
-            try
+            (string? message, string? errorMessage) = recipeRepository.DeleteRecipe(id);
+
+            if (errorMessage == null)
             {
-                recipeRepository.DeleteRecipe(id);
-                return ("Recept succesvol verwijderd!", null);
-            } catch
+                return (message, null);
+            } else
             {
-                return (null, "Er is iets fout gegaan bij het verwijderen van het recept.");
+                return (null, errorMessage);
             }
         }
     }

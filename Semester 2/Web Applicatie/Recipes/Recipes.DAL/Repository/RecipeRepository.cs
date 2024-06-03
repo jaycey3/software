@@ -14,7 +14,7 @@ namespace Recipes.DAL.Repository
             dataAccess = new();
         }
 
-        public List<RecipeModel>? GetAllRecipes()
+        public (List<RecipeModel>?, string?) GetAllRecipes()
         {
             List<RecipeModel> recipes = [];
             try
@@ -42,12 +42,12 @@ namespace Recipes.DAL.Repository
                     };
                     recipes.Add(recipe);
                 }
-                return recipes;
+                return (recipes, null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                Console.WriteLine("Something went wrong while trying to get all recipes: " + ex.Message);
+                return (null, "Er is iets fout gegaan tijdens het ophalen van de recepten.");
             }
             finally
             {
@@ -55,7 +55,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeModel? UpdateRecipe(int id, string? title, string? description, int time, string? type, string? img)
+        public (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int time, string? type, string? img)
         {
             try
             {
@@ -83,12 +83,12 @@ namespace Recipes.DAL.Repository
                     Img = img,
                 };
 
-                return updatedRecipe;
+                return (updatedRecipe, "Recept succesvol bijgewerkt!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                Console.WriteLine("Something went wrong while trying to update the recipe: " + ex.Message);
+                return (null, "Er is iets fout gegaan bij het bewerken van het recept.");
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeModel? GetRecipeById(int id)
+        public (RecipeModel?, string?) GetRecipeById(int id)
         {
             try
             {
@@ -127,16 +127,16 @@ namespace Recipes.DAL.Repository
                         Ingredients = GetRecipeIngredients(id)
                     };
 
-
-                    return recipe;
+                    return (recipe, null);
+                } else
+                {
+                    return (null, "Recept niet gevonden.");
                 }
-                return null;
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                Console.WriteLine("Something went wrong while trying to get the recipe: " + ex.Message);
+                return (null, "Er is iets fout gegaan bij het ophalen van het recept.");
             }
             finally
             {
@@ -144,7 +144,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeModel? CreateRecipe(string title, string description, int time, string type, string img)
+        public (RecipeModel?, string?) CreateRecipe(string title, string description, int time, string type, string img)
         {
             try
             {
@@ -171,12 +171,12 @@ namespace Recipes.DAL.Repository
                     Img = img,
                 };
 
-                return recipe;
+                return (recipe, "Recept succesvol opgeslagen!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                Console.WriteLine("There was an error while trying to create the recipe: " + ex.Message);
+                return (null, "Er is iets fout gegaan bij het opslaan van het recept.");
             }
             finally
             {
@@ -184,7 +184,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public void DeleteRecipe(int id)
+        public (string?, string?) DeleteRecipe(int id)
         {
             try
             {
@@ -196,10 +196,13 @@ namespace Recipes.DAL.Repository
                 command.Parameters.AddWithValue("@Id", id);
 
                 command.ExecuteNonQuery();
+
+                return ("Recept succesvol verwijderd!", null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("There was an error while trying to delete the recipe: " + ex);
+                Console.WriteLine("There was an error while trying to delete the recipe: " + ex.Message);
+                return (null, "Er is iets fout gegaan bij het verwijderen van het recept.");
             }
             finally
             {
