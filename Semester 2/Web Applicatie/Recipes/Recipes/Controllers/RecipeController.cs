@@ -6,15 +6,15 @@ using Ingredient = Recipes.Logic.Models.IngredientModel;
 
 namespace Recipes.Controllers
 {
-    public class RecipeController(RecipeService recipeService, 
-        StepService stepService, 
-        IngredientService ingredientService, 
+    public class RecipeController(RecipeService recipeService,
+        StepService stepService,
+        IngredientService ingredientService,
         RecipeIngredientService recipeIngredientService) : Controller
     {
         [HttpGet]
         public ActionResult Index()
         {
-            List<Recipe>? recipes = recipeService.GetAllRecipes();
+            (List<Recipe>? recipes, string? errorMessage) = recipeService.GetAllRecipes();
             List<RecipeViewModel> recipeViewModels = [];
 
             if (recipes != null)
@@ -24,6 +24,10 @@ namespace Recipes.Controllers
                     RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
                     recipeViewModels.Add(recipeViewModel);
                 }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = errorMessage;
             }
 
             if (TempData["SuccessMessage"] != null)
@@ -41,11 +45,12 @@ namespace Recipes.Controllers
 
         public ActionResult Details(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
+            (Recipe? recipe, string? errorMessage) = recipeService.GetRecipeById(id);
 
             if (recipe == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = errorMessage;
+                return RedirectToAction("Index");
             }
 
             RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
@@ -56,7 +61,6 @@ namespace Recipes.Controllers
         public ActionResult Create()
         {
             List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
-
             ViewBag.Ingredients = ingredients;
 
             return View();
@@ -68,30 +72,30 @@ namespace Recipes.Controllers
         {
             if (ModelState.IsValid)
             {
+                (Recipe? recipe, string? message) = recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
                 try
                 {
-                    var newRecipe = recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
-                    if (newRecipe != null)
+                    if (recipe != null)
                     {
                         foreach (var step in viewModel.Steps)
                         {
-                            step.RecipeId = newRecipe.Id;
+                            step.RecipeId = recipe.Id;
                             stepService.CreateStep(step.Order, step.Description, step.RecipeId);
                         }
 
                         foreach (var ingredient in viewModel.Ingredients)
                         {
-                            ingredient.RecipeId = newRecipe.Id;
+                            ingredient.RecipeId = recipe.Id;
                             recipeIngredientService.AddIngredient(ingredient.RecipeId, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
                         }
                     }
 
-                    TempData["SuccessMessage"] = "Recept succesvol aangemaakt!";
+                    TempData["SuccessMessage"] = message;
                     return RedirectToAction("Index");
                 }
-                catch (Exception ex)
+                catch
                 {
-                    TempData["ErrorMessage"] = "Er is een error opgetreden bij het aanmaken van een recept!";
+                    TempData["ErrorMessage"] = message;
                 }
             }
             return View(viewModel);
@@ -100,24 +104,28 @@ namespace Recipes.Controllers
         [HttpPost]
         public ActionResult Edit(RecipeViewModel viewModel)
         {
-            Recipe? recipe = recipeService.UpdateRecipe(viewModel.Id, viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+            (Recipe? recipe, string? message) = recipeService.UpdateRecipe(viewModel.Id, viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
 
-            if (recipe != null)
+            try
             {
-                foreach (var step in viewModel.Steps)
+                if (recipe != null)
                 {
-                    stepService.UpdateStep(step.Id, step.Order, step.Description);
+                    foreach (var step in viewModel.Steps)
+                    {
+                        stepService.UpdateStep(step.Id, step.Order, step.Description);
+                    }
+                    foreach (var ingredient in viewModel.Ingredients)
+                    {
+                        recipeIngredientService.UpdateIngredient(viewModel.Id, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
+                    }
                 }
-                foreach (var ingredient in viewModel.Ingredients)
-                {
-                    recipeIngredientService.UpdateIngredient(viewModel.Id, ingredient.IngredientId, ingredient.Quantity, ingredient.Unit);
-                }
-                TempData["SuccessMessage"] = "Recept succesvol opgeslagen!";
+
+                TempData["SuccessMessage"] = message;
                 return RedirectToAction("Index");
             }
-            else
+            catch
             {
-                TempData["ErrorMessage"] = "Er is een error opgetreden bij het opslaan van het recept!";
+                TempData["ErrorMessage"] = message;
                 return View("Index");
             }
         }
@@ -125,34 +133,35 @@ namespace Recipes.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
-            List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
-
-            ViewBag.Ingredients = ingredients;
-
-            if (recipe == null)
-            {
-                return NotFound();
-            }
-
+            (Recipe? recipe, string? errorMessage) = recipeService.GetRecipeById(id);
             RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
 
-            return View(recipeViewModel);
+            if (recipe != null)
+            {
+                List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
+                ViewBag.Ingredients = ingredients;
+                return View(recipeViewModel);
+            } else
+            {
+                TempData["ErrorMessage"] = errorMessage;
+                return NotFound();
+            }
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            Recipe? recipe = recipeService.GetRecipeById(id);
+            (Recipe? recipe, string? errorMessage) = recipeService.GetRecipeById(id);
 
-            if (recipe == null)
+            if (recipe != null)
             {
+                RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
+                return View(recipeViewModel);
+            } else
+            {
+                TempData["ErrorMessage"] = errorMessage;
                 return NotFound();
             }
-
-            RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
-
-            return View(recipeViewModel);
         }
 
         [HttpPost]
@@ -161,18 +170,17 @@ namespace Recipes.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                (string? successMessage, string? errorMessage) = recipeService.DeleteRecipe(viewModel.Id);
+                if (errorMessage != null)
                 {
                     stepService.DeleteStepsByRecipeId(viewModel.Id);
                     recipeIngredientService.DeleteRecipeIngredients(viewModel.Id);
-                    recipeService.DeleteRecipe(viewModel.Id);
-                    TempData["SuccessMessage"] = "Recept succesvol verwijderd!";
+
+                    TempData["SuccessMessage"] = successMessage;
                     return RedirectToAction("Index");
-                }
-                catch (Exception ex)
+                } else
                 {
-                    TempData["ErrorMessage"] = "Er is een error opgetreden tijdens het verwijderen van het recept!";
-                    Console.WriteLine("There was an error while trying to delete recipe: " + ex);
+                    TempData["ErrorMessage"] = errorMessage;
                 }
             }
             return View(viewModel);

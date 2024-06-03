@@ -29,7 +29,7 @@ namespace Recipes.Logic.Services
 
             if (recipe != null)
             {
-                return (recipe, null);
+                return (recipe, "Recept succesvol opgeslagen!");
             }
             else
             {
@@ -61,22 +61,22 @@ namespace Recipes.Logic.Services
 
             if (recipe != null)
             {
-                return (recipe, null);
+                return (recipe, "Recept succesvol aangemaakt!");
             } else
             {
                 return (null, "Er is iets fout gegaan bij het aanmaken van het recept.");
             }
         }
 
-        public string? DeleteRecipe(int id)
+        public (string?, string?) DeleteRecipe(int id)
         {
             try
             {
                 recipeRepository.DeleteRecipe(id);
-                return null;
+                return ("Recept succesvol verwijderd!", null);
             } catch
             {
-                return "Er is iets fout gegaan bij het verwijderen van het recept.";
+                return (null, "Er is iets fout gegaan bij het verwijderen van het recept.");
             }
         }
     }
