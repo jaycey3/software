@@ -11,7 +11,7 @@ namespace Recipes.Models
         [Display(Name = "Beschrijving")]
         public string? Description { get; set; }
         [Display(Name = "Bereidingstijd")]
-        public int Time { get; set; }
+        public int? Time { get; set; }
         [Display(Name = "Menugang")]
         public string? Type { get; set; }
         [Display(Name = "Afbeelding")]

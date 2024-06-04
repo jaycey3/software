@@ -73,6 +73,17 @@ namespace Recipes.Controllers
             if (ModelState.IsValid)
             {
                 (Recipe? recipe, string? message) = recipeService.CreateRecipe(viewModel.Title, viewModel.Description, viewModel.Time, viewModel.Type, viewModel.Img);
+
+                if (recipe == null)
+                {
+                    ViewBag.ErrorMessage = message;
+
+                    List<Ingredient>? ingredients = ingredientService.GetAllIngredients();
+                    ViewBag.Ingredients = ingredients;
+
+                    return View(viewModel);
+                }
+
                 try
                 {
                     if (recipe != null)

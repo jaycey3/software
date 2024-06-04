@@ -11,13 +11,13 @@ namespace Recipes.Logic.Services
             return ingredients;
         }
 
-        public RecipeIngredientModel? UpdateIngredient(int recipeId, int oldIngredientId, int newIngredientId, decimal quantity, string? unit)
+        public RecipeIngredientModel? UpdateIngredient(int recipeId, int oldIngredientId, int newIngredientId, decimal? quantity, string? unit)
         {
             RecipeIngredientModel? ingredient = recipeIngredientRepository.UpdateIngredient(recipeId, oldIngredientId, newIngredientId, quantity, unit);
             return ingredient;
         }
 
-        public RecipeIngredientModel? AddIngredient(int recipeId, int ingredientId, decimal quantity, string? unit)
+        public RecipeIngredientModel? AddIngredient(int recipeId, int ingredientId, decimal? quantity, string? unit)
         {
             RecipeIngredientModel? ingredient = recipeIngredientRepository.AddIngredient(recipeId, ingredientId, quantity, unit);
             return ingredient;

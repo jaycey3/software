@@ -18,7 +18,7 @@ namespace Recipes.Logic.Services
             }
         }
 
-        public (RecipeModel?, string?) UpdateRecipe(int id, string title, string description, int time, string type, string img)
+        public (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int? time, string? type, string? img)
         {
             if (title == null || description == null || time == 0 || type == null || img == null)
             {
@@ -50,7 +50,7 @@ namespace Recipes.Logic.Services
             }
         }
 
-        public (RecipeModel?, string?) CreateRecipe(string title, string description, int time, string type, string img)
+        public (RecipeModel?, string?) CreateRecipe(string? title, string? description, int? time, string? type, string? img)
         {
             if (title == null || description == null || time == 0 || type == null || img == null)
             {

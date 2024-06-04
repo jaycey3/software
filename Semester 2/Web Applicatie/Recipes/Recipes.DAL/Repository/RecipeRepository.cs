@@ -55,7 +55,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int time, string? type, string? img)
+        public (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int? time, string? type, string? img)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public (RecipeModel?, string?) CreateRecipe(string title, string description, int time, string type, string img)
+        public (RecipeModel?, string?) CreateRecipe(string? title, string? description, int? time, string? type, string? img)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace Recipes.DAL.Repository
             {
                 Console.WriteLine("There was an error while trying to create the recipe: " + ex.Message);
                 return (null, "Er is iets fout gegaan bij het opslaan van het recept.");
-            }
+            }+
             finally
             {
                 dataAccess.CloseConnection();

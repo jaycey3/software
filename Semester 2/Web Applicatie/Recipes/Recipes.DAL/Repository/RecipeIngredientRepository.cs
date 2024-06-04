@@ -50,7 +50,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeIngredientModel? UpdateIngredient(int recipeId, int oldIngredientId, int newIngredientId, decimal quantity, string? unit)
+        public RecipeIngredientModel? UpdateIngredient(int recipeId, int oldIngredientId, int newIngredientId, decimal? quantity, string? unit)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public RecipeIngredientModel? AddIngredient(int recipeId, int ingredientId, decimal quantity, string? unit)
+        public RecipeIngredientModel? AddIngredient(int recipeId, int ingredientId, decimal? quantity, string? unit)
         {
             try
             {
