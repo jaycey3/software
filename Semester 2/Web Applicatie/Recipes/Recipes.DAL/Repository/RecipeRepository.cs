@@ -42,7 +42,14 @@ namespace Recipes.DAL.Repository
                     };
                     recipes.Add(recipe);
                 }
-                return (recipes, null);
+
+                if (recipes.Count > 0)
+                {
+                    return (recipes, null);
+                } else
+                {
+                    return (null, "Geen recepten gevonden.");
+                }
             }
             catch (Exception ex)
             {
@@ -177,7 +184,7 @@ namespace Recipes.DAL.Repository
             {
                 Console.WriteLine("There was an error while trying to create the recipe: " + ex.Message);
                 return (null, "Er is iets fout gegaan bij het opslaan van het recept.");
-            }+
+            }
             finally
             {
                 dataAccess.CloseConnection();

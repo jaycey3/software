@@ -14,11 +14,12 @@ namespace Recipes.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            (List<Recipe>? recipes, string? errorMessage) = recipeService.GetAllRecipes();
+            (List<Recipe>? recipes, string? message) = recipeService.GetAllRecipes();
             List<RecipeViewModel> recipeViewModels = [];
 
             if (recipes != null)
             {
+
                 foreach (Recipe recipe in recipes)
                 {
                     RecipeViewModel recipeViewModel = ConvertRecipeToRecipeViewModel(recipe);
@@ -27,12 +28,19 @@ namespace Recipes.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = errorMessage;
+                TempData["ErrorMessage"] = message;
             }
 
+
+            //ViewBag messages voor Index view
             if (TempData["SuccessMessage"] != null)
             {
                 ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            }
+
+            if (TempData["InfoMessage"] != null)
+            {
+                ViewBag.InfoMessage = TempData["InfoMessage"];
             }
 
             if (TempData["ErrorMessage"] != null)

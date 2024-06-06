@@ -7,14 +7,20 @@ namespace Recipes.Logic.Services
     {
         public (List<RecipeModel>?, string?) GetAllRecipes()
         {
-            (List<RecipeModel>? recipes, string? errorMessage)  = recipeRepository.GetAllRecipes();
+            (List<RecipeModel>? recipes, string? message)  = recipeRepository.GetAllRecipes();
 
             if (recipes != null)
             {
-                return (recipes, null);
+                if (recipes.Count > 0)
+                {
+                    return (recipes, null);
+                } else
+                {
+                    return (recipes, message);
+                }
             } else
             {
-                return (null, errorMessage);
+                return (null, message);
             }
         }
 
@@ -52,7 +58,7 @@ namespace Recipes.Logic.Services
 
         public (RecipeModel?, string?) CreateRecipe(string? title, string? description, int? time, string? type, string? img)
         {
-            if (title == null || description == null || time == 0 || type == null || img == null)
+            if (title == null || title.Length > 500 || description == null || time == 0 || type == null || img == null)
             {
                 return (null, "Niet alle velden zijn correct ingevuld. Probeer het opnieuw.");
             }
