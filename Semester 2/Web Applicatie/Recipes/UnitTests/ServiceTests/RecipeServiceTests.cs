@@ -70,5 +70,48 @@ namespace UnitTests.ServiceTests
             Assert.IsNull(recipe);
             Assert.AreEqual("Er is iets fout gegaan bij het opslaan van het recept.", message);
         }
+
+        [TestMethod]
+        public void GetAllRecipesNoRecipes()
+        {
+            List<RecipeModel> recipesList = [];
+
+            mockRecipeRepository.Setup(repository => repository.GetAllRecipes())
+                .Returns((recipesList, "Geen recepten gevonden."));
+
+            (List<RecipeModel>? recipes, string? message) = recipeService.GetAllRecipes();
+
+            Assert.IsNotNull(recipes);
+            Assert.AreEqual("Geen recepten gevonden.", message);
+        }
+
+        [TestMethod]
+        public void GetAllRecipesSuccess()
+        {
+            List<RecipeModel> recipesList = [];
+            RecipeModel recipeModel = new() { Id = 1, Title = "Title", Description = "Description", Time = 30, Type = "Type", Img = "Img" };
+            recipesList.Add(recipeModel);
+
+            mockRecipeRepository.Setup(repository => repository.GetAllRecipes())
+                .Returns((recipesList, null));
+
+            (List<RecipeModel>? recipes, string? message) = recipeService.GetAllRecipes();
+
+            Assert.IsNotNull (recipes);
+            Assert.AreEqual(recipes, recipesList);
+            Assert.AreEqual(null, message);
+        }
+
+        [TestMethod]
+        public void GetAllrecipesRepositoryError()
+        {
+            mockRecipeRepository.Setup(repository => repository.GetAllRecipes())
+                .Returns((null, "Er is iets fout gegaan tijdens het ophalen van de recepten."));
+
+            (List<RecipeModel>? recipes, string? message) = recipeService.GetAllRecipes();
+
+            Assert.IsNull(recipes);
+            Assert.AreEqual("Er is iets fout gegaan tijdens het ophalen van de recepten.", message);
+        }
     }
 }
