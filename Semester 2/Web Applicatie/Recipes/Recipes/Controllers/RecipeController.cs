@@ -196,16 +196,16 @@ namespace Recipes.Controllers
                 stepService.DeleteStepsByRecipeId(viewModel.Id);
                 recipeIngredientService.DeleteRecipeIngredients(viewModel.Id);
 
-                (string? successMessage, string? deleteRecipeErrorMessage) = recipeService.DeleteRecipe(viewModel.Id);
+                (bool? success, string? message) = recipeService.DeleteRecipe(viewModel.Id);
 
-                if (deleteRecipeErrorMessage == null)
+                if (success == true)
                 {
-                    TempData["SuccessMessage"] = successMessage;
+                    TempData["SuccessMessage"] = message;
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    errorMessage = deleteRecipeErrorMessage;
+                    errorMessage = message;
                     return RedirectToAction("Index");
                 }
             }

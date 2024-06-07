@@ -191,7 +191,7 @@ namespace Recipes.DAL.Repository
             }
         }
 
-        public (string?, string?) DeleteRecipe(int id)
+        public (bool?, string?) DeleteRecipe(int id)
         {
             try
             {
@@ -204,12 +204,12 @@ namespace Recipes.DAL.Repository
 
                 command.ExecuteNonQuery();
 
-                return ("Recept succesvol verwijderd!", null);
+                return (true, "Recept succesvol verwijderd!");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("There was an error while trying to delete the recipe: " + ex.Message);
-                return (null, "Er is iets fout gegaan bij het verwijderen van het recept.");
+                return (false, "Er is iets fout gegaan bij het verwijderen van het recept.");
             }
             finally
             {

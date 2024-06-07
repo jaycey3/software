@@ -113,5 +113,111 @@ namespace UnitTests.ServiceTests
             Assert.IsNull(recipes);
             Assert.AreEqual("Er is iets fout gegaan tijdens het ophalen van de recepten.", message);
         }
+
+        [TestMethod]
+        public void UpdateRecipeNullTitle()
+        {
+            (RecipeModel? recipe, string? message) = recipeService.UpdateRecipe(1, null, "Description", 30, "Type", "Img");
+
+            Assert.IsNull(recipe);
+            Assert.AreEqual("Niet alle velden zijn correct ingevuld. Probeer het opnieuw.", message);
+        }
+
+        [TestMethod]
+        public void UpdateRecipeZeroTime()
+        {
+            (RecipeModel? recipe, string? message) = recipeService.UpdateRecipe(1, "Title", "Description", 0, "Type", "Img");
+
+            Assert.IsNull(recipe);
+            Assert.AreEqual("Niet alle velden zijn correct ingevuld. Probeer het opnieuw.", message);
+        }
+
+        [TestMethod]
+        public void UpdateRecipeSuccessfully()
+        {
+            RecipeModel recipeModel = new() { Id = 1, Title = "Title", Description = "Description", Time = 30, Type = "Type", Img = "Img" };
+
+            mockRecipeRepository.Setup(repository => repository.UpdateRecipe(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                                .Returns((recipeModel, "Recept succesvol bijgewerkt!"));
+
+            (RecipeModel? recipe, string? message) = recipeService.UpdateRecipe(1, "Title", "Description", 30, "Type", "Img");
+
+            Assert.IsNotNull(recipe);
+            Assert.AreEqual("Recept succesvol bijgewerkt!", message);
+        }
+
+        [TestMethod]
+        public void UpdateRecipeRepositoryError()
+        {
+            mockRecipeRepository.Setup(repository => repository.UpdateRecipe(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                                .Returns((null, "Er is iets fout gegaan bij het bewerken van het recept."));
+
+            (RecipeModel? recipe, string? message) = recipeService.UpdateRecipe(1, "Title", "Description", 30, "Type", "Img");
+
+            Assert.IsNull(recipe);
+            Assert.AreEqual("Er is iets fout gegaan bij het bewerken van het recept.", message);
+        }
+
+        [TestMethod]
+        public void GetRecipeByIdDoesNotExist()
+        {
+            mockRecipeRepository.Setup(repository => repository.GetRecipeById(It.IsAny<int>()))
+                .Returns((null, "Recept niet gevonden."));
+
+            (RecipeModel? recipe, string? message) = recipeService.GetRecipeById(1);
+
+            Assert.IsNull(recipe);
+            Assert.AreEqual("Recept niet gevonden.", message);
+        }
+
+        [TestMethod]
+        public void GetRecipeByIdSuccess()
+        {
+            RecipeModel recipeModel = new() { Id = 1, Title = "Title", Description = "Description", Time = 30, Type = "Type", Img = "Img" };
+
+            mockRecipeRepository.Setup(repository => repository.GetRecipeById(It.IsAny<int>()))
+                .Returns((recipeModel, null));
+
+            (RecipeModel? recipe, string? message) = recipeService.GetRecipeById(1);
+
+            Assert.IsNotNull(recipe);
+            Assert.AreEqual(null, message);
+        }
+
+        [TestMethod]
+        public void GetRecipeByIdRepositoryError()
+        {
+            mockRecipeRepository.Setup(repository => repository.GetRecipeById(It.IsAny<int>()))
+                .Returns((null, "Er is iets fout gegaan bij het ophalen van het recept."));
+
+            (RecipeModel? recipe, string? message) = recipeService.GetRecipeById(1);
+
+            Assert.IsNull(recipe);
+            Assert.AreEqual("Er is iets fout gegaan bij het ophalen van het recept.", message);
+        }
+
+        [TestMethod]
+        public void DeleteRecipeSuccess()
+        {
+            mockRecipeRepository.Setup(repository => repository.DeleteRecipe(It.IsAny<int>()))
+                .Returns((true, "Recept succesvol verwijderd!"));
+
+            (bool? success, string? message) = recipeService.DeleteRecipe(1);
+
+            Assert.IsTrue(success);
+            Assert.AreEqual("Recept succesvol verwijderd!", message);
+        }
+
+        [TestMethod]
+        public void DeleteRecipeRepistoryError()
+        {
+            mockRecipeRepository.Setup(repository => repository.DeleteRecipe(It.IsAny<int>()))
+                .Returns((false, "Er is iets fout gegaan bij het verwijderen van het recept."));
+
+            (bool? success, string? message) = recipeService.DeleteRecipe(1);
+
+            Assert.IsFalse(success);
+            Assert.AreEqual("Er is iets fout gegaan bij het verwijderen van het recept.", message);
+        }
     }
 }

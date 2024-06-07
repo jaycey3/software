@@ -74,16 +74,16 @@ namespace Recipes.Logic.Services
             }
         }
 
-        public (string?, string?) DeleteRecipe(int id)
+        public (bool?, string?) DeleteRecipe(int id)
         {
-            (string? message, string? errorMessage) = recipeRepository.DeleteRecipe(id);
+            (bool? success, string? message) = recipeRepository.DeleteRecipe(id);
 
-            if (errorMessage == null)
+            if (success == true)
             {
-                return (message, null);
+                return (true, message);
             } else
             {
-                return (null, errorMessage);
+                return (false, message);
             }
         }
     }

@@ -8,6 +8,6 @@ namespace Recipes.Logic.Interfaces
         (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int? time, string? type, string? img);
         (RecipeModel?, string?) GetRecipeById(int id);
         (RecipeModel?, string?) CreateRecipe(string? title, string? description, int? time, string? type, string? img);
-        (string?, string?) DeleteRecipe(int id);
+        (bool?, string?) DeleteRecipe(int id);
     }
 }
