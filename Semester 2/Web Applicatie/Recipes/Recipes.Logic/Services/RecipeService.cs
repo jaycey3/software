@@ -26,7 +26,7 @@ namespace Recipes.Logic.Services
 
         public (RecipeModel?, string?) UpdateRecipe(int id, string? title, string? description, int? time, string? type, string? img)
         {
-            if (title == null || description == null || time == 0 || type == null || img == null)
+            if (string.IsNullOrEmpty(title) || description == null || time == 0 || type == null || img == null)
             {
                 return (null, "Niet alle velden zijn correct ingevuld. Probeer het opnieuw.");
             }

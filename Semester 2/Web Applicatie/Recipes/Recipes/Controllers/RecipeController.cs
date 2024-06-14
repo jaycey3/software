@@ -8,7 +8,7 @@ namespace Recipes.Controllers
 {
     public class RecipeController(RecipeService recipeService,
         StepService stepService,
-        IngredientService ingredientService,
+        IngredientService ingredientService,                                
         RecipeIngredientService recipeIngredientService) : Controller
     {
         [HttpGet]
