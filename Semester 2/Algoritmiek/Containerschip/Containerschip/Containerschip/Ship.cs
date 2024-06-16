@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Containerschip
 {
@@ -6,12 +8,16 @@ namespace Containerschip
     {
         public int Width { get; set; }
         public int Length { get; set; }
+        public int MaxWeight { get; set; }
+        public int MinWeight { get; set; }
         public List<Row> Rows { get; set; }
 
         public Ship(int width, int length)
         {
             Width = width;
             Length = length;
+            MaxWeight = (length * width) * 150;
+            MinWeight = MaxWeight / 2;
             List<Row> rows = new List<Row>();
             
             for (int i = 0; i < length; i++)
