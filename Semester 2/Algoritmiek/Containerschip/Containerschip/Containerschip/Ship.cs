@@ -28,5 +28,10 @@ namespace Containerschip
 
             Rows = rows;
         }
+
+        public void LoadContainers(List<Container> containers)
+        {
+
+        }
     }
 }
