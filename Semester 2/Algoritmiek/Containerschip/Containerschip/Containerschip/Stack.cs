@@ -6,6 +6,8 @@ namespace Containerschip
     public class Stack
     {
         public int Posistion { get; set; }
+        public int TotalWeight { get; set; }
+        public int MaxWeight { get; set; }
         public List<Container> Containers { get; set; }
         public int MaxWeight = 150;
         public int Weight { get; set; }
