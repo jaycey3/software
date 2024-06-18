@@ -28,5 +28,30 @@ namespace Containerschip
 
             Rows = rows;
         }
+
+        public void LoadContainer(Container container)
+        {
+            Row row = null;
+
+            if (container.ContainerType == Container.ContainerTypes.CoolableAndValuable ||
+                container.ContainerType == Container.ContainerTypes.Coolable)
+            {
+                row = Rows.First();
+            }
+            else
+            {
+                row = Rows.FirstOrDefault(r => r.CanAddContainerToAnyStack(container));
+            }
+
+            if (row != null)
+            {
+                row.AddContainerToFirstAvailableStack(container);
+            }
+            else
+            {
+                Console.WriteLine("Er is geen ruimte beschikbaar om de container te plaatsen.");
+            }
+        }
+
     }
 }

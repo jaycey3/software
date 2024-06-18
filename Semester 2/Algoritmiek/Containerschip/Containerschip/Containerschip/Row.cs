@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Containerschip
 {
@@ -10,13 +11,28 @@ namespace Containerschip
         public Row(int position, int rowWidth)
         {
             Position = position;
-            List<Stack> stacks = new List<Stack>();
+            Stacks = new List<Stack>();
             for (int i =0; i < rowWidth; i++)
             {
-                Stack stack = new Stack(i);
-                stacks.Add(stack);
+                Stacks.Add(new Stack(i));
             }
-            Stacks = stacks;
+        }
+
+        public bool CanAddContainerToAnyStack(Container container)
+        {
+            return Stacks.Any(stack => stack.CanAddContainerToStack(container));
+        }
+
+        public void AddContainerToFirstAvailableStack(Container container)
+        {
+            foreach (var stack in Stacks)
+            {
+                if (stack.CanAddContainerToStack(container))
+                {
+                    stack.AddContainerToStack(container);
+                    return;
+                }
+            }
         }
     }
 }

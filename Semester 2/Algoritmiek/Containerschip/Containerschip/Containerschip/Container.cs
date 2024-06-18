@@ -5,7 +5,6 @@
         public int Weight { get; set; }
         private readonly int MaxWeight = 30;
         private readonly int MinWeight = 4;
-
         public ContainerTypes ContainerType { get; set; }
 
         public enum ContainerTypes
