@@ -10,7 +10,6 @@ namespace Containerschip
     {
         public Ship Ship { get; set; }
         public List<Container> Containers { get; set; } = new List<Container>();
-        public List<Container> ExcessContainers { get; set; } = new List<Container>();
 
         public Crane(int shipWidth, int shipLength)
         {
@@ -50,41 +49,48 @@ namespace Containerschip
                 MessageBox.Show("An error occured.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-
         }
 
         public bool DistributeContainers()
         {
-            List<Container> containersToRemove = new List<Container>();
+            List<Container> AddedContainers = new List<Container>();
+            List<Container> notSuitedContainers = new List<Container>();
 
             foreach (Container container in Containers)
             {
-                if (!AddContainerOnSide(container))
+                if (AddContainer(container))
                 {
-                    if (!AddContainerInCenter(container).Item1)
-                    {
-                        ExcessContainers.Add(AddContainerInCenter(container).Item2);
-                        containersToRemove.Add(container);
-                    }
+                    AddedContainers.Add(container);
+                }
+                else
+                {
+                    notSuitedContainers.Add(container);
                 }
             }
-
-            foreach (Container container in containersToRemove)
-            {
-                Containers.Remove(container);
-            }
+            Containers = AddedContainers;
             return true;
         }
 
-        private bool AddContainerOnSide(Container container)
+        private bool AddContainer(Container container)
+        {
+            if (AddContainerToSide(container))
+            {
+                return true;
+            }
+            return AddContainerToCenter(container);
+        }
+
+        private bool AddContainerToSide(Container container)
         {
             foreach (Row row in Ship.Rows)
             {
-                if ((Ship.LeftWeight < Ship.RightWeight && row.Side == Row.Sides.Left) || (Ship.LeftWeight >= Ship.RightWeight && row.Side == Row.Sides.Right))
+                bool isLeftSideLighter = Ship.LeftWeight < Ship.RightWeight;
+                if ((isLeftSideLighter && row.Side == Row.Sides.Left) ||
+                    (!isLeftSideLighter && row.Side == Row.Sides.Right))
                 {
                     if (row.TryAddingContainer(container))
                     {
-                        if (Ship.LeftWeight < Ship.RightWeight)
+                        if (isLeftSideLighter)
                         {
                             Ship.LeftWeight += container.Weight;
                         }
@@ -99,7 +105,7 @@ namespace Containerschip
             return false;
         }
 
-        private (bool, Container) AddContainerInCenter(Container container)
+        private bool AddContainerToCenter(Container container)
         {
             foreach (Row row in Ship.Rows)
             {
@@ -107,11 +113,11 @@ namespace Containerschip
                 {
                     if (row.TryAddingContainer(container))
                     {
-                        return (true, container);
+                        return true;
                     }
                 }
             }
-            return (false, container);
+            return false;
         }
 
         private string StartVisualizer()
