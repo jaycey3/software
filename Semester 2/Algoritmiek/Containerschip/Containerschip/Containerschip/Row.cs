@@ -5,32 +5,59 @@ namespace Containerschip
 {
     public class Row
     {
-        public int Position { get; set; }
         public List<Stack> Stacks { get; set; }
+        public int Width { get; set; }
+        public Sides Side { get; set; }
 
-        public Row(int position, int rowWidth)
+        public enum Sides
         {
-            Position = position;
+            Left = 1,
+            Centre = 2,
+            Right = 3,
+        }
+
+        public Row(int width, Sides side)
+        {
             Stacks = new List<Stack>();
-            for (int i =0; i < rowWidth; i++)
+            for (int i = 0; i < Width; i++)
             {
-                Stacks.Add(new Stack(i));
-            }
-        }
-
-        public bool CanAddContainerToAnyStack(Container container)
-        {
-            return Stacks.Any(stack => stack.CanAddContainerToStack(container));
-        }
-
-        public void AddContainerToFirstAvailableStack(Container container)
-        {
-            foreach (var stack in Stacks)
-            {
-                if (stack.CanAddContainerToStack(container))
+                if (i == 0)
                 {
-                    stack.AddContainerToStack(container);
-                    return;
+                    Stacks.Add(new Stack(i, true, false));
+                }
+                else if ((i + 1) == Width)
+                {
+                    Stacks.Add(new Stack(i, false, true));
+                }
+                else
+                {
+                    Stacks.Add(new Stack(i, false, false));
+                }
+            }
+
+        }
+
+        public bool TryAddingContainer(Container container)
+        {
+            for (int i = 0; i < Stacks.Count; i++)
+            {
+                if (Stacks[i].TryAddingContainer(container))
+                {
+                    ReserveStackForValuableContainers(container, i);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ReserveStackForValuableContainers(Container container, int index)
+        {
+            if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
+            {
+                if (index > 0 && !Stacks[index - 1].Reserved && index + 1 < Stacks.Count)
+                {
+                    Stacks[index + 1].Reserved = true;
                 }
             }
         }

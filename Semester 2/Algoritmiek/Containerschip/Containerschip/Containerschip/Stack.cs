@@ -5,44 +5,90 @@ namespace Containerschip
 {
     public class Stack
     {
-        public int Posistion { get; set; }
-        public int TotalWeight { get; set; }
-        public int MaxWeight { get; set; }
+        public int Position { get; set; }
+        public bool IsFront { get; private set; }
+        public bool IsBack { get; private set; }
+        public bool Reserved { get; set; }
         public List<Container> Containers { get; set; }
-        public int MaxWeight = 150;
-        public int Weight { get; set; }
-
-        public Stack(int posistion)
+        private readonly int BaseMaxWeight = 120;
+        public int MaxWeight
         {
-            Posistion = posistion;
-            List<Container> containers = new List<Container>();
-            Containers = containers;
-            Weight = 0;
-        }
-
-        public void AddContainerToStack(Container container)
-        {
-            Containers.Add(container);
-            Weight = Containers.Sum(c => c.Weight);
-        }
-
-        public bool CanAddContainerToStack(Container container)
-        {
-            Container lastContainer = Containers.LastOrDefault();
-            if (lastContainer != null &&
-                 (lastContainer.ContainerType == Container.ContainerTypes.Valueable ||
-                  lastContainer.ContainerType == Container.ContainerTypes.CoolableAndValuable))
+            get
             {
+                if (Containers.Count > 0)
+                {
+                    return BaseMaxWeight + Containers[0].Weight;
+                }
+                return BaseMaxWeight;
+            }
+        }
+
+        public int ContainersWeight
+        {
+            get
+            {
+                int totalWeight = 0;
+                foreach (Container container in Containers)
+                {
+                    totalWeight += container.Weight;
+                }
+                return totalWeight;
+            }
+        }
+
+        public Stack(int position, bool isfront, bool isBack)
+        {
+            Position = position;
+            IsFront = isfront;
+            IsBack = isBack;
+        }
+
+        public bool TryAddingContainer(Container container)
+        {
+            if (Reserved)
+            {
+                container.UnfitReason = Container.UnfitReasons.Reserved;
                 return false;
             }
-            else if (Weight + container.Weight > MaxWeight)
+            else if (container.ContainerType == Container.ContainerTypes.Coolable && Position > 0)
             {
+                container.UnfitReason = Container.UnfitReasons.TooManyCoolables;
                 return false;
-            } else
+            }
+            else if (container.ContainerType == Container.ContainerTypes.CoolableAndValuable && Position > 0)
             {
+                container.UnfitReason = Container.UnfitReasons.TooManyCoolableValuables;
+                return false;
+            }
+
+            if (ContainersWeight + container.Weight <= MaxWeight)
+            {
+                if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
+                {
+                    if (Containers.Count == 0 ||
+                        Containers.LastOrDefault().ContainerType != Container.ContainerTypes.Valueable &&
+                        Containers.LastOrDefault().ContainerType != Container.ContainerTypes.CoolableAndValuable)
+                    {
+                        Containers.Add(container);
+                    }
+                    else
+                    {
+                        container.UnfitReason = Container.UnfitReasons.TooManyValuables;
+                        return false;
+                    }
+                }
+                else
+                {
+                    Containers.Insert(0, container);
+                }
+
                 return true;
             }
+            else
+            {
+                container.UnfitReason = Container.UnfitReasons.ExceedsMaxWeight;
+                return false;
+            }
         }
-
     }
 }

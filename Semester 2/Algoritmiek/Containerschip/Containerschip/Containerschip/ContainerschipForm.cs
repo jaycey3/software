@@ -26,6 +26,7 @@ namespace Containerschip
             Crane Crane = new Crane(shipWidth, shipLength);
 
             Crane.Containers.AddRange(containers);
+            Crane.Run();
         }
     }
 }
