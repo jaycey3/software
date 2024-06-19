@@ -24,25 +24,17 @@ namespace Containerschip
 
         public bool TryAddingContainer(Container container)
         {
-            if (Reserved)
+            if (Reserved ||
+                container.ContainerType == Container.ContainerTypes.Coolable && Position > 0 ||
+                container.ContainerType == Container.ContainerTypes.CoolableAndValuable && Position > 0)
             {
-                container.UnfitReason = Container.UnfitReasons.Reserved;
-                return false;
-            }
-            else if (container.ContainerType == Container.ContainerTypes.Coolable && Position > 0)
-            {
-                container.UnfitReason = Container.UnfitReasons.TooManyCoolables;
-                return false;
-            }
-            else if (container.ContainerType == Container.ContainerTypes.CoolableAndValuable && Position > 0)
-            {
-                container.UnfitReason = Container.UnfitReasons.TooManyCoolableValuables;
                 return false;
             }
 
             if (ContainersWeight + container.Weight <= MaxWeight)
             {
-                if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
+                if (container.ContainerType == Container.ContainerTypes.Valueable || 
+                    container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
                 {
                     if (Containers.Count == 0 ||
                         Containers.LastOrDefault().ContainerType != Container.ContainerTypes.Valueable &&
@@ -52,7 +44,6 @@ namespace Containerschip
                     }
                     else
                     {
-                        container.UnfitReason = Container.UnfitReasons.TooManyValuables;
                         return false;
                     }
                 }
@@ -64,7 +55,6 @@ namespace Containerschip
             }
             else
             {
-                container.UnfitReason = Container.UnfitReasons.ExceedsMaxWeight;
                 return false;
             }
         }
