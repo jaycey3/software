@@ -43,7 +43,6 @@ namespace Containerschip
             {
                 throw new Exception("Weight maximun is 30 tons");
             }
-
             return weight;
         }
     }

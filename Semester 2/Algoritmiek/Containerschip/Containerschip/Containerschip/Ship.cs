@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Containerschip
@@ -11,38 +9,11 @@ namespace Containerschip
         public int Length { get; set; }
         public int MaxWeight { get; set; }
         public int MinWeight { get; set; }
-        public int Weight { get; set; }
-        private List<Row> RowsList;
-        public List<Row> Rows { get { return InitializeRows(); } }
+        public List<Row> Rows { get; private set; }
         public int LeftWeight { get; set; }
         public int RightWeight { get; set; }
-        public List<Container> Containers { get; set; }
-
-        public double WeightDifferencePercentage
-        {
-            get
-            {
-                return ((LeftWeight / TotalWeight) * 100) - ((RightWeight / TotalWeight) * 100);
-            }
-        }
-
-        public int TotalWeight
-        {
-            get
-            {
-                int totalWeight = 0;
-                foreach (Row row in Rows) {
-                    foreach (Stack stack in row.Stacks)
-                    {
-                        foreach (Container container in stack.Containers)
-                        {
-                            totalWeight += container.Weight;
-                        }
-                    }
-                }
-                return totalWeight;
-            }
-        }
+        public double WeightDifference { get { return ((LeftWeight / (double)Weight) * 100) - ((RightWeight / (double)Weight) * 100); } }
+        public int Weight { get { return Rows.Sum(row => row.Stacks.Sum(stack => stack.Containers.Sum(container => container.Weight))); } }
 
         public Ship(int width, int length)
         {
@@ -50,66 +21,51 @@ namespace Containerschip
             Length = length;
             MaxWeight = (length * width) * 150;
             MinWeight = MaxWeight / 2;
+            Rows = new List<Row>();
+
+            for (int i = 0; i < Width; i++)
+            {
+                Row.Sides side;
+
+                if (Width % 2 == 0)
+                {
+                    side = CalculateEvenRows(i);
+                }
+                else
+                {
+                    side = CalculateUnevenRows(i);
+                }
+
+                Rows.Add(new Row(Length, side));
+            }
         }
+
         private Row.Sides CalculateEvenRows(int i)
         {
-            Row.Sides side;
             if (i < Width / 2)
             {
-                side = Row.Sides.Left;
+                return Row.Sides.Left;
             }
             else
             {
-                side = Row.Sides.Right;
+                return Row.Sides.Right;
             }
-
-            return side;
         }
 
         private Row.Sides CalculateUnevenRows(int i)
         {
-            Row.Sides side;
-
             if (i < Width / 2)
             {
-                side = Row.Sides.Left;
+                return Row.Sides.Left;
             }
             else if (i > Width / 2)
             {
-                side = Row.Sides.Right;
+                return Row.Sides.Right;
             }
             else
             {
-                side = Row.Sides.Centre;
+                return Row.Sides.Centre;
             }
-
-            return side;
-        }
-
-        public List<Row> InitializeRows()
-        {
-            if (RowsList == null)
-            {
-                RowsList = new List<Row>();
-
-                for (int i = 0; i < Width; i++)
-                {
-                    Row.Sides side;
-
-                    if (Width % 2 == 0)
-                    {
-                        side = CalculateEvenRows(i);
-                    }
-                    else
-                    {
-                        side = CalculateUnevenRows(i);
-                    }
-
-                    Rows.Add(new Row(Length, side));
-                }
-            }
-
-            return Rows;
         }
     }
 }

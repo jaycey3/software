@@ -18,7 +18,10 @@ namespace Containerschip
 
         public Row(int width, Sides side)
         {
+            Width = width;
+            Side = side;
             Stacks = new List<Stack>();
+
             for (int i = 0; i < Width; i++)
             {
                 if (i == 0)
@@ -34,7 +37,6 @@ namespace Containerschip
                     Stacks.Add(new Stack(i, false, false));
                 }
             }
-
         }
 
         public bool TryAddingContainer(Container container)
@@ -47,7 +49,6 @@ namespace Containerschip
                     return true;
                 }
             }
-
             return false;
         }
 

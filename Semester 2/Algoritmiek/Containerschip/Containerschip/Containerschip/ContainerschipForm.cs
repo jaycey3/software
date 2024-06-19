@@ -15,13 +15,30 @@ namespace Containerschip
 
         private void runBtn_Click(object sender, EventArgs e)
         {
+            containers.Clear();
             int shipWidth = (int)shipWidthInput.Value;
             int shipLength = (int)shipLengthInput.Value;
 
-            containers.Add(new Container(4, 1));
-            containers.Add(new Container(30, 2));
-            containers.Add(new Container(30, 3));
-            containers.Add(new Container(30, 4));
+            //Normal containers
+            for (int i = 0; i < 25; i++)
+            {
+                containers.Add(new Container(30, 1));
+            }
+            // Coolable containers
+            for (int i = 0; i < 7; i++)
+            {
+                containers.Add(new Container(30, 2));
+            }
+            // Valuable containers
+            for (int i = 0; i < 5; i++)
+            {
+                containers.Add(new Container(30, 3));
+            }
+            // Coolable and valuable containers
+            for (int i = 0; i < 3; i++)
+            {
+                containers.Add(new Container(30, 4));
+            }
 
             Crane Crane = new Crane(shipWidth, shipLength);
 

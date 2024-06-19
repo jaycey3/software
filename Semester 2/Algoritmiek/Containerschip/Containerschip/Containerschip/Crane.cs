@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Mail;
 using System.Windows.Forms;
 
 namespace Containerschip
@@ -31,22 +30,24 @@ namespace Containerschip
         {
             if (DistributeContainers())
             {
-                if (Ship.TotalWeight < Ship.MinWeight)
+                if (Ship.Weight < Ship.MinWeight)
                 {
-                    Console.WriteLine("Containers are too light.");
+                    MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
 
-                if (Ship.WeightDifferencePercentage > 20)
+                if (Ship.WeightDifference > 20)
                 {
-                    Console.WriteLine("Ship is capsizing.");
+                    MessageBox.Show("Ship is capsizing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
 
                 StartVisualizer();
-
                 return true;
             }
             else
             {
+                MessageBox.Show("An error occured.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -58,11 +59,11 @@ namespace Containerschip
 
             foreach (Container container in Containers)
             {
-                if (!AddContainerLeftOrRight(container))
+                if (!AddContainerOnSide(container))
                 {
-                    if (!AddContainerCenter(container).Item1)
+                    if (!AddContainerInCenter(container).Item1)
                     {
-                        ExcessContainers.Add(AddContainerCenter(container).Item2);
+                        ExcessContainers.Add(AddContainerInCenter(container).Item2);
                         containersToRemove.Add(container);
                     }
                 }
@@ -72,12 +73,10 @@ namespace Containerschip
             {
                 Containers.Remove(container);
             }
-
             return true;
         }
 
-
-        private bool AddContainerLeftOrRight(Container container)
+        private bool AddContainerOnSide(Container container)
         {
             foreach (Row row in Ship.Rows)
             {
@@ -93,16 +92,14 @@ namespace Containerschip
                         {
                             Ship.RightWeight += container.Weight;
                         }
-
                         return true;
                     }
                 }
             }
-
             return false;
         }
 
-        private (bool, Container) AddContainerCenter(Container container)
+        private (bool, Container) AddContainerInCenter(Container container)
         {
             foreach (Row row in Ship.Rows)
             {
@@ -121,39 +118,32 @@ namespace Containerschip
         {
             string fullStack = "";
             string fullWeight = "";
-            for (int z = 0; z < Ship.Rows.Count; z++)
-            {
-                if (z > 0)
-                {
-                    fullStack += '/';
-                    fullWeight += '/';
-                }
 
-                for (int x = 0; x < Ship.Rows[z].Stacks.Count; x++)
+            foreach (Row row in Ship.Rows)
+            {
+                foreach (Stack stack in row.Stacks)
                 {
-                    if (x > 0)
+                    foreach (Container container in stack.Containers)
+                    {
+                        fullStack += Convert.ToString((int)container.ContainerType);
+                        fullWeight += Convert.ToString(container.Weight);
+                        if (stack.Containers.Last() != container)
+                        {
+                            fullWeight += "-";
+                        }
+                    }
+                    if (row.Stacks.Last() != stack)
                     {
                         fullStack += ",";
                         fullWeight += ",";
                     }
-
-                    if (Ship.Rows[z].Stacks[x].Containers.Count > 0)
-                    {
-                        for (int y = 0; y < Ship.Rows[z].Stacks[x].Containers.Count; y++)
-                        {
-                            Container container = Ship.Rows[z].Stacks[x].Containers[y];
-
-                            fullStack += Convert.ToString((int)container.ContainerType);
-                            fullWeight += Convert.ToString(container.Weight);
-                            if (y < (Ship.Rows[z].Stacks[x].Containers.Count - 1))
-                            {
-                                fullWeight += "-";
-                            }
-                        }
-                    }
+                }
+                if (Ship.Rows.Last() != row)
+                {
+                    fullStack += "/";
+                    fullWeight += "/";
                 }
             }
-
             Process.Start($"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + fullStack + "&weights=" + fullWeight + "");
             return $"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + fullStack + "&weights=" + fullWeight + "";
         }

@@ -5,42 +5,21 @@ namespace Containerschip
 {
     public class Stack
     {
+        private readonly int MaxWeightOnContainer = 120;
         public int Position { get; set; }
-        public bool IsFront { get; private set; }
-        public bool IsBack { get; private set; }
+        public bool Front { get; private set; }
+        public bool Back { get; private set; }
         public bool Reserved { get; set; }
         public List<Container> Containers { get; set; }
-        private readonly int BaseMaxWeight = 120;
-        public int MaxWeight
-        {
-            get
-            {
-                if (Containers.Count > 0)
-                {
-                    return BaseMaxWeight + Containers[0].Weight;
-                }
-                return BaseMaxWeight;
-            }
-        }
+        public int MaxWeight { get { return MaxWeightOnContainer + (Containers.Count > 0 ? Containers[0].Weight : 0); } }
+        public int ContainersWeight { get { return Containers.Sum(container => container.Weight); } }
 
-        public int ContainersWeight
-        {
-            get
-            {
-                int totalWeight = 0;
-                foreach (Container container in Containers)
-                {
-                    totalWeight += container.Weight;
-                }
-                return totalWeight;
-            }
-        }
-
-        public Stack(int position, bool isfront, bool isBack)
+        public Stack(int position, bool front, bool back)
         {
             Position = position;
-            IsFront = isfront;
-            IsBack = isBack;
+            Front = front;
+            Back = back;
+            Containers = new List<Container>();
         }
 
         public bool TryAddingContainer(Container container)
@@ -81,7 +60,6 @@ namespace Containerschip
                 {
                     Containers.Insert(0, container);
                 }
-
                 return true;
             }
             else
