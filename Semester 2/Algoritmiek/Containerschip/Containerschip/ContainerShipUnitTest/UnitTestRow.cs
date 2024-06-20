@@ -4,7 +4,7 @@ using System;
 namespace ContainerShipUnitTest
 {
     [TestClass]
-    public class UnitTestsCrane
+    public class UnitTestRow
     {
         [TestMethod]
         public void TestMethod1()

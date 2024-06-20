@@ -49,12 +49,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnitTestsCrane.cs" />
+    <Compile Include="UnitTestsShip.cs" />
+    <Compile Include="UnitTestRow.cs" />
+    <Compile Include="UnitTestStack.cs" />
     <Compile Include="UnitTestContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTestsCrane.cs" />
-    <Compile Include="UnitTestsRow.cs" />
-    <Compile Include="UnitTestsShip.cs" />
-    <Compile Include="UnitTestsStack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

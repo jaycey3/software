@@ -4,11 +4,12 @@ using System;
 namespace ContainerShipUnitTest
 {
     [TestClass]
-    public class UnitTestsCrane
+    public class UnitTestStack
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TryAddingContainerTest()
         {
+
         }
     }
 }
