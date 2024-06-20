@@ -51,13 +51,13 @@ namespace Containerschip
             return false;
         }
 
-        private void ReserveStackForValuableContainers(Container container, int index)
+        private void ReserveStackForValuableContainers(Container container, int stackPosition)
         {
             if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
             {
-                if (index > 0 && !Stacks[index - 1].Reserved && index + 1 < Stacks.Count)
+                if (stackPosition + 1 < Stacks.Count && stackPosition > 0 && !Stacks[stackPosition - 1].Reserved && !Stacks[stackPosition + 1].Reserved)
                 {
-                    Stacks[index + 1].Reserved = true;
+                    Stacks[stackPosition + 1].Reserved = true;
                 }
             }
         }

@@ -29,18 +29,18 @@ namespace Containerschip
 
                 if (Width % 2 == 0)
                 {
-                    side = CalculateEvenRows(i);
+                    side = CalculateEvenRow(i);
                 }
                 else
                 {
-                    side = CalculateUnevenRows(i);
+                    side = CalculateUnevenRow(i);
                 }
 
                 Rows.Add(new Row(Length, side));
             }
         }
 
-        private Row.Sides CalculateEvenRows(int i)
+        private Row.Sides CalculateEvenRow(int i)
         {
             if (i < Width / 2)
             {
@@ -52,7 +52,7 @@ namespace Containerschip
             }
         }
 
-        private Row.Sides CalculateUnevenRows(int i)
+        private Row.Sides CalculateUnevenRow(int i)
         {
             if (i < Width / 2)
             {
