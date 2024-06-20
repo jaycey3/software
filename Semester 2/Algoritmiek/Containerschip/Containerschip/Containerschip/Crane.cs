@@ -14,7 +14,6 @@ namespace Containerschip
         public Crane(int shipWidth, int shipLength)
         {
             Ship = new Ship(shipWidth, shipLength);
-            SortContainers();
         }
 
         public void SortContainers()
@@ -27,6 +26,7 @@ namespace Containerschip
 
         public bool Run()
         {
+            SortContainers();
             if (DistributeContainers())
             {
                 if (Ship.Weight < Ship.MinWeight)
@@ -67,6 +67,35 @@ namespace Containerschip
                     notSuitedContainers.Add(container);
                 }
             }
+
+            if (notSuitedContainers != null)
+            {
+                for (int i = notSuitedContainers.Count - 1; i >= 0; i--)
+                {
+                    Container container = notSuitedContainers[i];
+                    if (AddContainer(container))
+                    {
+                        AddedContainers.Add(container);
+                        notSuitedContainers.RemoveAt(i);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                Console.WriteLine("Not suited containers:");
+                if (notSuitedContainers.Count > 0) 
+                {
+                    foreach (Container container in notSuitedContainers)
+                    {
+                        Console.WriteLine(container.ContainerType.ToString());
+                    }
+                } else
+                {
+                    Console.WriteLine("None.");
+                }
+            }
+
             Containers = AddedContainers;
             return true;
         }
