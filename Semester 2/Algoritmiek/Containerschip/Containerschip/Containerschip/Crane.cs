@@ -78,10 +78,6 @@ namespace Containerschip
                         AddedContainers.Add(container);
                         notSuitedContainers.RemoveAt(i);
                     }
-                    else
-                    {
-                        return true;
-                    }
                 }
                 Console.WriteLine("Not suited containers:");
                 if (notSuitedContainers.Count > 0) 

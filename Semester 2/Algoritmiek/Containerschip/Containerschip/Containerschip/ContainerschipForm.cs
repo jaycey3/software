@@ -20,16 +20,16 @@ namespace Containerschip
             int shipLength = (int)shipLengthInput.Value;
 
             //Normal containers
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 40; i++)
             {
                 containers.Add(new Container(30, 1));
             }
-            // Coolable containers
+            // Valueable containers
             for (int i = 0; i < 7; i++)
             {
                 containers.Add(new Container(30, 2));
             }
-            // Valuable containers
+            // Coolable containers
             for (int i = 0; i < 5; i++)
             {
                 containers.Add(new Container(30, 3));

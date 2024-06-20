@@ -55,7 +55,8 @@ namespace Containerschip
         {
             if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
             {
-                if (stackPosition + 1 < Stacks.Count && stackPosition > 0 && !Stacks[stackPosition - 1].Reserved && !Stacks[stackPosition + 1].Reserved)
+                // Controleer of de stack niet aan de voor of achterkant zit en of de stack er voor of er achter niet gereserveerd is
+                if (stackPosition > 0 && stackPosition + 1 < Stacks.Count  && !Stacks[stackPosition - 1].Reserved && !Stacks[stackPosition + 1].Reserved)
                 {
                     Stacks[stackPosition + 1].Reserved = true;
                 }

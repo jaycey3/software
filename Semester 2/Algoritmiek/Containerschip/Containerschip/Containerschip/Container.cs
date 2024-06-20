@@ -19,7 +19,7 @@ namespace Containerschip
 
         public Container(int weight, int containerType)
         {
-            Weight = weight;
+            Weight = SetWeight(weight);
             ContainerType = (ContainerTypes)containerType;
         }
 
@@ -27,11 +27,11 @@ namespace Containerschip
         {
             if (weight < MinWeight)
             {
-                throw new Exception("Weight mininum is 4 tons");
+                throw new Exception("Weight minimum is 4 tons");
             }
             else if (weight > MaxWeight)
             {
-                throw new Exception("Weight maximun is 30 tons");
+                throw new Exception("Weight maximum is 30 tons");
             }
             return weight;
         }
