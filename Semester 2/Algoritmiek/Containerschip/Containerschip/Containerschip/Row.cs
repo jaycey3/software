@@ -38,11 +38,11 @@ namespace Containerschip
             }
         }
 
-        public bool TryAddingContainer(Container container)
+        public bool TryToAddContainerToRow(Container container)
         {
             for (int i = 0; i < Stacks.Count; i++)
             {
-                if (Stacks[i].TryAddingContainer(container))
+                if (Stacks[i].TryToAddContainerToStack(container))
                 {
                     ReserveStackForValuableContainers(container, i);
                     return true;

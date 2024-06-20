@@ -22,7 +22,7 @@ namespace Containerschip
             Containers = new List<Container>();
         }
 
-        public bool TryAddingContainer(Container container)
+        public bool TryToAddContainerToStack(Container container)
         {
             if (Reserved ||
                 container.ContainerType == Container.ContainerTypes.Coolable && Position > 0 ||

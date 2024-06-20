@@ -113,7 +113,7 @@ namespace Containerschip
                 if ((isLeftSideLighter && row.Side == Row.Sides.Left) ||
                     (!isLeftSideLighter && row.Side == Row.Sides.Right))
                 {
-                    if (row.TryAddingContainer(container))
+                    if (row.TryToAddContainerToRow(container))
                     {
                         if (isLeftSideLighter)
                         {
@@ -136,7 +136,7 @@ namespace Containerschip
             {
                 if (row.Side == Row.Sides.Centre)
                 {
-                    if (row.TryAddingContainer(container))
+                    if (row.TryToAddContainerToRow(container))
                     {
                         return true;
                     }
