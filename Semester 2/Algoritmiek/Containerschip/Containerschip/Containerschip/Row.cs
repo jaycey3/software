@@ -11,7 +11,7 @@ namespace Containerschip
         public enum Sides
         {
             Left = 1,
-            Centre = 2,
+            Center = 2,
             Right = 3,
         }
 
@@ -21,30 +21,26 @@ namespace Containerschip
             Side = side;
             Stacks = new List<Stack>();
 
+            // Maak stacks aan met een positie
             for (int i = 0; i < Length; i++)
             {
-                if (i == 0)
-                {
-                    Stacks.Add(new Stack(i));
-                }
-                else if ((i + 1) == Length)
-                {
-                    Stacks.Add(new Stack(i));
-                }
-                else
-                {
-                    Stacks.Add(new Stack(i));
-                }
+                Stacks.Add(new Stack(i));
             }
         }
 
         public bool TryToAddContainerToRow(Container container)
         {
+            // Zoek de eerste stack waar de container aan toegevoegd kan worden
             for (int i = 0; i < Stacks.Count; i++)
             {
+                // Probeer de container toe te voegen
                 if (Stacks[i].TryToAddContainerToStack(container))
                 {
-                    ReserveStackForValuableContainers(container, i);
+                    // Als het een valuable container is, probeer een stack te reserveren
+                    if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
+                    {
+                        ReserveStackForValuableContainers(container, i);
+                    }
                     return true;
                 }
             }
@@ -53,14 +49,13 @@ namespace Containerschip
 
         private void ReserveStackForValuableContainers(Container container, int stackPosition)
         {
-            if (container.ContainerType == Container.ContainerTypes.Valueable || container.ContainerType == Container.ContainerTypes.CoolableAndValuable)
+
+            // Controleer of de stack niet aan de voor of achterkant zit en of de stack er voor of er achter niet gereserveerd is
+            if (stackPosition > 0 && stackPosition + 1 < Stacks.Count && !Stacks[stackPosition - 1].Reserved && !Stacks[stackPosition + 1].Reserved)
             {
-                // Controleer of de stack niet aan de voor of achterkant zit en of de stack er voor of er achter niet gereserveerd is
-                if (stackPosition > 0 && stackPosition + 1 < Stacks.Count  && !Stacks[stackPosition - 1].Reserved && !Stacks[stackPosition + 1].Reserved)
-                {
-                    Stacks[stackPosition + 1].Reserved = true;
-                }
+                Stacks[stackPosition + 1].Reserved = true;
             }
+
         }
     }
 }

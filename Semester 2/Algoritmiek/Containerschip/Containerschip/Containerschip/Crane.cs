@@ -29,12 +29,14 @@ namespace Containerschip
             SortContainers();
             DistributeContainers();
 
+            // Controleer of meer dan de helft van het maximaal gewicht gebruikt wordt
             if (Ship.Weight < Ship.MinWeight)
             {
                 MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
+            // Controleer of het verschil in gewicht voor de linker en rechter kant van het schip niet meer dan 20% verschilt
             if (Ship.WeightDifference > 20)
             {
                 MessageBox.Show("Ship is capsizing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -52,6 +54,7 @@ namespace Containerschip
 
             foreach (Container container in Containers)
             {
+                // Kijk voor elke container of je hem toe kan voegen
                 if (AddContainer(container))
                 {
                     AddedContainers.Add(container);
@@ -62,6 +65,7 @@ namespace Containerschip
                 }
             }
 
+            // Als er een lijst is met containers die niet passen, probeer ze nog een keer te plaatsen
             if (notSuitedContainers != null)
             {
                 for (int i = notSuitedContainers.Count - 1; i >= 0; i--)
@@ -73,6 +77,8 @@ namespace Containerschip
                         notSuitedContainers.RemoveAt(i);
                     }
                 }
+
+                // Als er nog steeds containers zijn die niet passen, log dan naar de console welke containers niet op het schip passen
                 Console.WriteLine("Not suited containers:");
                 if (notSuitedContainers.Count > 0)
                 {
@@ -92,23 +98,26 @@ namespace Containerschip
 
         private bool AddContainer(Container container)
         {
-            if (AddContainerToSide(container))
+            // Probeer eerst de container in het midden te plaatsen, en als dat niet lukt probeer hem aan de zijkant te plaatsen
+            if (AddContainerToCenter(container))
             {
                 return true;
             }
-            return AddContainerToCenter(container);
+            return AddContainerToSide(container);
         }
 
         private bool AddContainerToSide(Container container)
         {
             foreach (Row row in Ship.Rows)
             {
+                // Als de linker kant lichter is dan de rechter kant en de rij is links, of de linker kant is niet lichter en de rij is rechts, probeer de container te plaatsen
                 bool isLeftSideLighter = Ship.LeftWeight < Ship.RightWeight;
                 if ((isLeftSideLighter && row.Side == Row.Sides.Left) ||
                     (!isLeftSideLighter && row.Side == Row.Sides.Right))
                 {
                     if (row.TryToAddContainerToRow(container))
                     {
+                        // Als de container links is geplaats, tel het gewicht van de container op bij het linker gewicht, anders bij het rechter gewicht
                         if (isLeftSideLighter)
                         {
                             Ship.LeftWeight += container.Weight;
@@ -128,8 +137,10 @@ namespace Containerschip
         {
             foreach (Row row in Ship.Rows)
             {
-                if (row.Side == Row.Sides.Centre)
+                // Wanneer een rij in het midden is gevonden, probeer de container toe te voegen
+                if (row.Side == Row.Sides.Center)
                 {
+                    // Probeer de container toe te voegen aan de middelste rij
                     if (row.TryToAddContainerToRow(container))
                     {
                         return true;
@@ -141,8 +152,9 @@ namespace Containerschip
 
         private string StartVisualizer()
         {
-            string fullStack = "";
-            string fullWeight = "";
+            // Maak een string aan voor de stacks en voor de weights
+            string stacks = "";
+            string weights = "";
 
             foreach (Row row in Ship.Rows)
             {
@@ -150,27 +162,32 @@ namespace Containerschip
                 {
                     foreach (Container container in stack.Containers)
                     {
-                        fullStack += Convert.ToString((int)container.ContainerType);
-                        fullWeight += Convert.ToString(container.Weight);
+                        // Voeg elke container type en gewicht toe aan de strings
+                        stacks += Convert.ToString((int)container.ContainerType);
+                        weights += Convert.ToString(container.Weight);
+                        // Voeg een - toe achter de laatste container van de stack
                         if (stack.Containers.Last() != container)
                         {
-                            fullWeight += "-";
+                            weights += "-";
                         }
                     }
+                    // Voeg een , toe achter de laatste srack in de rij
                     if (row.Stacks.Last() != stack)
                     {
-                        fullStack += ",";
-                        fullWeight += ",";
+                        stacks += ",";
+                        weights += ",";
                     }
                 }
+                // Voeg een / toe achter de laatste rij van het schip
                 if (Ship.Rows.Last() != row)
                 {
-                    fullStack += "/";
-                    fullWeight += "/";
+                    stacks += "/";
+                    weights += "/";
                 }
             }
-            Process.Start($"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + fullStack + "&weights=" + fullWeight + "");
-            return $"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + fullStack + "&weights=" + fullWeight + "";
+            // Open de visualizer link
+            Process.Start($"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + stacks + "&weights=" + weights + "");
+            return $"https://i872272.luna.fhict.nl/ContainerVisualizer/index.html?length=" + Ship.Length + "&width=" + Ship.Width + "&stacks=" + stacks + "&weights=" + weights + "";
         }
     }
 }

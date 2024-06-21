@@ -23,6 +23,7 @@ namespace Containerschip
             MinWeight = MaxWeight / 2;
             Rows = new List<Row>();
 
+            // Defineer de zijdes voor de rijen.
             for (int i = 0; i < Width; i++)
             {
                 Row.Sides side;
@@ -40,6 +41,7 @@ namespace Containerschip
             }
         }
 
+        // Geef de rijen een zijde, links of rechts. als er 4 rijen zijn (0, 1, 2, 3) is 0 en 1 links, en 2 en 3 rechts
         private Row.Sides CalculateEvenRow(int i)
         {
             if (i < Width / 2)
@@ -52,6 +54,7 @@ namespace Containerschip
             }
         }
 
+        // Geef de rijen een zijde, links of rechts, en anders midden. Als er 5 rijen zijn (0, 1, 2, 3, 4) is 0 en 1 links, 2 midden, en 3 en 4 zijn rechts.
         private Row.Sides CalculateUnevenRow(int i)
         {
             if (i < Width / 2)
@@ -64,7 +67,7 @@ namespace Containerschip
             }
             else
             {
-                return Row.Sides.Centre;
+                return Row.Sides.Center;
             }
         }
     }
