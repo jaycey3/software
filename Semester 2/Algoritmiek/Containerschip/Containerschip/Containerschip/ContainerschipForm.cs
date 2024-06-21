@@ -19,23 +19,28 @@ namespace Containerschip
             int shipWidth = (int)shipWidthInput.Value;
             int shipLength = (int)shipLengthInput.Value;
 
+            int normals = (int)normalCount.Value;
+            int valuables = (int)valuableCount.Value;
+            int coolables = (int)coolableCount.Value;
+            int coolableAndValuables = (int)coolableValuableCount.Value;
+
             //Normal containers
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < normals; i++)
             {
                 containers.Add(new Container(30, 1));
             }
             // Valueable containers
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < valuables; i++)
             {
                 containers.Add(new Container(30, 2));
             }
             // Coolable containers
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < coolables; i++)
             {
                 containers.Add(new Container(30, 3));
             }
             // Coolable and valuable containers
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < coolableAndValuables; i++)
             {
                 containers.Add(new Container(30, 4));
             }

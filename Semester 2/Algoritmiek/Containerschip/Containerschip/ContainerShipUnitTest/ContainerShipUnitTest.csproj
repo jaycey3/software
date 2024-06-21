@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UnitTestsCrane.cs" />
-    <Compile Include="UnitTestsShip.cs" />
     <Compile Include="UnitTestRow.cs" />
     <Compile Include="UnitTestStack.cs" />
     <Compile Include="UnitTestContainer.cs" />

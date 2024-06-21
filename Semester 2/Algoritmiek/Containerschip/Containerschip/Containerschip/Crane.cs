@@ -16,7 +16,7 @@ namespace Containerschip
             Ship = new Ship(shipWidth, shipLength);
         }
 
-        public void SortContainers()
+        private void SortContainers()
         {
             Containers = Containers
                 .OrderByDescending(c => c.ContainerType)
@@ -27,31 +27,25 @@ namespace Containerschip
         public bool Run()
         {
             SortContainers();
-            if (DistributeContainers())
-            {
-                if (Ship.Weight < Ship.MinWeight)
-                {
-                    MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+            DistributeContainers();
 
-                if (Ship.WeightDifference > 20)
-                {
-                    MessageBox.Show("Ship is capsizing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-
-                StartVisualizer();
-                return true;
-            }
-            else
+            if (Ship.Weight < Ship.MinWeight)
             {
-                MessageBox.Show("An error occured.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
+            if (Ship.WeightDifference > 20)
+            {
+                MessageBox.Show("Ship is capsizing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            StartVisualizer();
+            return true;
         }
 
-        public bool DistributeContainers()
+        private void DistributeContainers()
         {
             List<Container> AddedContainers = new List<Container>();
             List<Container> notSuitedContainers = new List<Container>();
@@ -80,20 +74,20 @@ namespace Containerschip
                     }
                 }
                 Console.WriteLine("Not suited containers:");
-                if (notSuitedContainers.Count > 0) 
+                if (notSuitedContainers.Count > 0)
                 {
                     foreach (Container container in notSuitedContainers)
                     {
                         Console.WriteLine(container.ContainerType.ToString());
                     }
-                } else
+                }
+                else
                 {
                     Console.WriteLine("None.");
                 }
             }
 
             Containers = AddedContainers;
-            return true;
         }
 
         private bool AddContainer(Container container)

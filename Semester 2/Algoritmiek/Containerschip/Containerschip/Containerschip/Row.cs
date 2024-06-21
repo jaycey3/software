@@ -5,7 +5,7 @@ namespace Containerschip
     public class Row
     {
         public List<Stack> Stacks { get; set; }
-        public int Width { get; set; }
+        public int Length { get; set; }
         public Sides Side { get; set; }
 
         public enum Sides
@@ -15,25 +15,25 @@ namespace Containerschip
             Right = 3,
         }
 
-        public Row(int width, Sides side)
+        public Row(int length, Sides side)
         {
-            Width = width;
+            Length = length;
             Side = side;
             Stacks = new List<Stack>();
 
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < Length; i++)
             {
                 if (i == 0)
                 {
-                    Stacks.Add(new Stack(i, true, false));
+                    Stacks.Add(new Stack(i));
                 }
-                else if ((i + 1) == Width)
+                else if ((i + 1) == Length)
                 {
-                    Stacks.Add(new Stack(i, false, true));
+                    Stacks.Add(new Stack(i));
                 }
                 else
                 {
-                    Stacks.Add(new Stack(i, false, false));
+                    Stacks.Add(new Stack(i));
                 }
             }
         }

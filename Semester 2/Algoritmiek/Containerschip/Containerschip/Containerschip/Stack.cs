@@ -7,18 +7,14 @@ namespace Containerschip
     {
         private readonly int MaxWeightOnContainer = 120;
         public int Position { get; set; }
-        public bool Front { get; private set; }
-        public bool Back { get; private set; }
         public bool Reserved { get; set; }
         public List<Container> Containers { get; set; }
         public int MaxWeight { get { return MaxWeightOnContainer + (Containers.Count > 0 ? Containers[0].Weight : 0); } }
         public int ContainersWeight { get { return Containers.Sum(container => container.Weight); } }
 
-        public Stack(int position, bool front, bool back)
+        public Stack(int position)
         {
             Position = position;
-            Front = front;
-            Back = back;
             Containers = new List<Container>();
         }
 
