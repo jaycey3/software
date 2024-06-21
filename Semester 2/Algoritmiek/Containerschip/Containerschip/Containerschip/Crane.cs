@@ -29,17 +29,17 @@ namespace Containerschip
             SortContainers();
             DistributeContainers();
 
-            // Controleer of meer dan de helft van het maximaal gewicht gebruikt wordt
-            if (Ship.Weight < Ship.MinWeight)
-            {
-                MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
             // Controleer of het verschil in gewicht voor de linker en rechter kant van het schip niet meer dan 20% verschilt
             if (Ship.WeightDifference > 20)
             {
                 MessageBox.Show("Ship is capsizing.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Controleer of meer dan de helft van het maximaal gewicht gebruikt wordt
+            if (Ship.Weight < Ship.MinWeight)
+            {
+                MessageBox.Show("Containers are too light.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

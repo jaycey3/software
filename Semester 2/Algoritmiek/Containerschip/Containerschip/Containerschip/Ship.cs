@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Containerschip
@@ -12,7 +13,9 @@ namespace Containerschip
         public List<Row> Rows { get; private set; }
         public int LeftWeight { get; set; }
         public int RightWeight { get; set; }
-        public double WeightDifference { get { return ((LeftWeight / (double)Weight) * 100) - ((RightWeight / (double)Weight) * 100); } }
+        // Bereken het verschil in gewicht tussen de linker en rechter kant van het schip
+        public double WeightDifference { get { return Math.Abs((LeftWeight / (double)Weight) * 100 - (RightWeight / (double)Weight) * 100); } }
+        // Tel het gewicht op van elke container in elke stack in elke rij
         public int Weight { get { return Rows.Sum(row => row.Stacks.Sum(stack => stack.Containers.Sum(container => container.Weight))); } }
 
         public Ship(int width, int length)
