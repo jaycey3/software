@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Containerschip
@@ -27,22 +28,22 @@ namespace Containerschip
             //Normal containers
             for (int i = 0; i < normals; i++)
             {
-                containers.Add(new Container(30, 1));
+                containers.Add(new Container(30, Containerschip.Container.ContainerTypes.Normal));
             }
             // Valueable containers
             for (int i = 0; i < valuables; i++)
             {
-                containers.Add(new Container(30, 2));
+                containers.Add(new Container(30, Containerschip.Container.ContainerTypes.Valueable));
             }
             // Coolable containers
             for (int i = 0; i < coolables; i++)
             {
-                containers.Add(new Container(30, 3));
+                containers.Add(new Container(30, Containerschip.Container.ContainerTypes.Coolable));
             }
             // Coolable and valuable containers
             for (int i = 0; i < coolableAndValuables; i++)
             {
-                containers.Add(new Container(30, 4));
+                containers.Add(new Container(30, Containerschip.Container.ContainerTypes.CoolableAndValuable));
             }
 
             Crane Crane = new Crane(shipWidth, shipLength);

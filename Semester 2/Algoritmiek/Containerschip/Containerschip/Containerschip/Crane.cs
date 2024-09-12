@@ -111,14 +111,15 @@ namespace Containerschip
             foreach (Row row in Ship.Rows)
             {
                 // Als de linker kant lichter is dan de rechter kant en de rij is links, of de linker kant is niet lichter en de rij is rechts, probeer de container te plaatsen
-                bool isLeftSideLighter = Ship.LeftWeight < Ship.RightWeight;
-                if ((isLeftSideLighter && row.Side == Row.Sides.Left) ||
-                    (!isLeftSideLighter && row.Side == Row.Sides.Right))
+                bool leftSideLighter = Ship.LeftWeight < Ship.RightWeight;
+
+                if ((leftSideLighter && row.Side == Row.Sides.Left) ||
+                    (!leftSideLighter && row.Side == Row.Sides.Right))
                 {
                     if (row.TryToAddContainerToRow(container))
                     {
                         // Als de container links is geplaats, tel het gewicht van de container op bij het linker gewicht, anders bij het rechter gewicht
-                        if (isLeftSideLighter)
+                        if (leftSideLighter)
                         {
                             Ship.LeftWeight += container.Weight;
                         }

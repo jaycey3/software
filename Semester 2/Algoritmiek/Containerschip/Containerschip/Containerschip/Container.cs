@@ -17,10 +17,10 @@ namespace Containerschip
             CoolableAndValuable = 4
         }
 
-        public Container(int weight, int containerType)
+        public Container(int weight, ContainerTypes containerType)
         {
             Weight = SetWeight(weight);
-            ContainerType = (ContainerTypes)containerType;
+            ContainerType = containerType;
         }
 
         private int SetWeight(int weight)
